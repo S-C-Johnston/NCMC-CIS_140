@@ -1,0 +1,104 @@
+**Perl**
+Larry Wall was a Unix sysadmin, and was frustrated with sed, awk, grep, etc, and wrote a language to handle those things.
+Can be used in a way that eliminates the need for the other tools, including much of bash scripting.
+
+-	Structure
+	Has a reputation for being a "read-only" language, because it lets you get away with crazy shit, basically.
+	See perlgolf or perl obfuscation
+	If you follow best practices and style guides, this becomes a non-issue.
+	+	Comment header block
+	+	Usage pragmas
+		*	Usage pragmas turn on language features for use, by means of a library/module.
+	+	Dispatch
+	+	Methods
+Perl specifics
+-	Variables
+	Dynamically typed language
+	Data types interpreted based on the circumstances.
+	Can be interpreted as an integer, a character, a string, etc, based on the context.
+	Also, floats, doubles, longs, shorts, etc
+	1	Scalars
+		Contains a single value of any data type.
+	2	Arrays
+		Contains an indexed group of values. Can contain other arrays for multi-dimensional arrays.
+		A list of scalars
+	3	Hashes
+		Arrays with key-value pairs. Unordered, keys used as indices.
+	+	Constants
+		Immutable, as per the usual. If needed printed, must be concatenated in.
+-	Sigils
+	All variables are prepended with a sigil of some kind.
+	1	$: Scalars
+		``$someNum``
+	2	@: Arrays
+		``@someArray``
+		+	Whole array referenced by @someArray
+			That syntax give the size of the array when assigned.
+		+	Index of array referenced by $someArray[someNum]
+	3	%: Hashes
+		``%someHash``
+-	Variable declaration
+	+	``my`` Declares a variable locally.
+	+	``use constant CONST_NAME => VALUE;``
+-	Strings eratta.
+	+	``print "somestring"``  Interprolate and output a string to STDOUT.
+	+	``say "somestring"`` Interprolate and output a string to STDOUT, automatically appends a newline.
+		"It's just a new language feature I wanted to demonstrate, I would never use it" --Howard
+	+	``chomp ($someVar = <SOME_FILEHANDLE>)`` Chomp is necessary to cut off a newline from the end of a string in STDIN.
+	+	``chop (etc)`` Chop performs the same function as chomp, but with any terminating character.
+-	Misc variable handling
+	+	Checking the state of a variable, null or defined is done with the ``defined``
+		``if (defined $someVar)`` etc
+	+	Assigning values to an array is easily done with a for loop. Increment the index with the local counter.
+		Nested for loops are the easiest way to iterate over multi-dimensional arrays.
+-	Method handling
+	+	Declared with ``sub``
+		``sub someMethod {block}``
+	+	Parameters in subroutines.
+		``subroutine(param1,param2,param3)``
+		``@_`` is the reference to the parameters array from within a subroutine.
+		``$_[$someParamIndex]`` is the reference to an index of the parameters array.
+		*	Unpacking the parameter list: the process of accepting parameters into a subroutine, and assigning them to local variables for use in the subroutine.
+-	Misc operators
+	+	``!~`` Does not contain
+	+	``||`` OR
+	+	``&&`` AND
+	+	``<SOME_FILEHANDLE>`` Wrapping a filehandle, like ``STDIN`` in angle brackets treats that filehandle like a value upon which operations can be performed.
+	+	``system (someCommand)`` call a system (shell) command from the interpreter.
+		``system ('clear')``
+	+	"``" Backticks, can be used in place of ``system`` call. Wrap a command in single backticks, and it runs.
+		"`clear`"
+
+-	Resources
+	+	PerlCritic
+		"If you want to hate yourself, you write some perl code out, and send it here, and let them tell you how bad you suck." --Howard
+	+	CPAN
+		Comprehensive Perl Archive Network
+		157,678 Perl modules available for use, not unlike libraries.
+
+**Languages**
+-	C
+-	C++
+-	Java
+-	Javascript
+	+	Designed for browsers to do dynamic tasks with a webpage.
+	+	Popular change is to write one-page applications, available across all platforms.
+	+	Node.js: a framework and engine to run javascript standalone.
+	+	Atom.io: an editor written in javascript. Don't use it, it's slow as shit.
+-	Objective-C
+-	Swift
+-	Ruby
+-	Perl
+-	Python
+-	Lua
+
+-	Data types
+	+	Statically typed
+		Expressly state what data type a variable will contain. Variable will remain that type (unless cast to something else)
+		*	Primitive types
+		*	Object types
+	+	Dynamically typed
+
+**Miscellaneous**
+Big O notation
+-	How many iterations or process cycles an algorithm might take to complete.

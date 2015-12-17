@@ -1,0 +1,97 @@
+**Unix misc**
+-	AAA
+	+	Authentication
+		*	How are users getting on the system?
+		*	Security
+		*	Passwd strength
+		*	VPNs
+	+	Access
+		*	What are they allowed to do?
+		*	Rights
+			What operations can they perform?
+		*	Permissions
+			What files can they see?
+	+	Auditing
+		*	How are users tracked?
+		*	Successes
+		*	Failures
+
+-	Commands
+	1	Command
+	2	Flags
+	3	Options
+	4	Arguments
+
+-	Scripts
+	+	First line should be the shebang ``#!`` to identify the interpreter.
+		``#!/bin/bash``
+	+	Should have execute permission for scripts.
+		*	Call them directly.
+
+-	RC files
+	"Run Commands"
+	+	If supported by a program, run at the program start according to its syntax.
+	+	.bashrc and .bash_profile run commands at login for user.
+		*	.bashrc runs only if .bash_profile calls it. .bashrc is typically used specifically to call user-written scripts on login.
+
+-	PATH envvar
+	Describes paths where the shell will automatically look for named programs to run.
+	Runs the first program of a name that it finds, left to right in the PATH.
+	+	Delimited with ``:``
+		``/bin/:/usr/bin/:$HOME/scripts:`` 
+	+	Typically exported from the profile or bashrc so it persists in subshells.
+
+-	cron
+	Executes commands/scripts automatically at certain times as per the cron table (crontab)
+
+-	Permissions
+	+	``-rwxrwxrwx john john``
+		*	First dash tells what kind of file it is, e.g. (d)irectory, (c)haracter, - regular file.
+		*	Permissions sets read left to right. Owner, group, and others.
+		*	Permissions of each set apply to everyone in the group.
+		*	First name is the owner
+			``chown``
+		*	Second name is the group
+			``chgrp``
+	+	Root always all permissions. Includes members of root group?
+
+**Bash is procedural! Like C, methods, variables, constants all need to be declared prior to use. main dispatch will not call methods declared after it is called.**
+
+**Bash scripting -- file I/O**
+-	IFS
+	+	Bash Internal Field Separator environment variable.
+	+	Tells Bash interpreter where to split words in a string.
+	+	``IFS = ","`` Tells bash to split words on commas.
+
+-	CSV files and 2D arrays
+	+	The columns are constant, the rows are variable
+		The number of columns will be consistent, but the number of rows may grow and shrink, no set value.
+
+-	Files as arguments.	
+	+	When calling a command, files can be passed as arguments.
+	+	Within the command, $1, $2, etc refer to the files passed as arguments.
+		All numbered variables in bash refer to arguments passed to the command.
+		Flags, options, arguments, etc need to be parsed separately within the program, $1 will still refer to the first argument, flag, option, argument, or otherwise.
+		*	``inFile = "$1"`` will assign inFile the value of the first argument.
+
+-	File processing
+	+	All languages handle fileI/O in the same conceptual manner.
+		1	The file is identified and passed to the process as an argument. From the command line, a GUI, or otherwise.
+		2	The file, by some identification, is read and assigned a filehandle.
+		3	By means of the filehandle, the file is parsed and unpacked into a multi-dimensional array or object(s).
+			*	Objects can then be pushed into an array of that kind of object.
+		4	The data is handled programatically as needed from then on, and written to disk if desired.
+	+	Written file should always be a different name than the first.
+
+-	Bash filehandle opening
+	+	The variables declared after "read" corrospond to the value of the word that bash is splitting.
+		Bash will puke if the number of variables and the number of words (columns) is different.
+	``while read wordOneVar wordTwoVar wordThreeVar
+	  do
+		for (some statement for number of rows) {
+			doStuff
+			$someVar = $wordOneVar
+			$someOtherVar = $wordTwoVar
+			etc
+		}
+	  done < $fileHandle``

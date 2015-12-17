@@ -1,0 +1,46 @@
+**Disaster Recovery**
++	Network -> data -> Backup Software -> Drive Array -> Tape storage
++	Filtering, deduplication
+	*	Filter out junk
+	*	Keep only unique copies of files
++	Knowing what data to backup
+	*	Keep a backup of a static system, but probably not continually back it up.
+	*	Hourly might be appropriate for users, but not for databases.
++	Tape scheme: Daily master, weekly master, monthly master, yearly master
++	Data
+	*	User files
+	*	Databases
+		Oracle: Live snapshot of database as a whole, can only restore if offline.
+		Exchange: Live snapshot of database at a granular level, can restore individual entries.
+	*	Server
+		Snapshot of Virtual Machine
++	Backup types
+	*	Full
+		Everything dictated to back up all at once.
+	*	Incremental
+		Full backup day 1, only backs up things changed from last backup. Full backup again on schedule.
+		Takes up to 7 tapes in a week.
+	*	Differential
+		Full backup day 1, backs up things chaned since last full backukp. Full backup again on schedule.
+		Needs only 2 tapes in a week.
++	Cloud backups
+	*	Handled off-site, primary concern is speed of transmission.
++	3rd party company choice must be a careful one.
+
+**VI -- VIsual editor**
+-	``vi filename``
+	+	Existing file will open as according to permissions, non-existing file will be created.
+-	``vi -r``
+	+	Recovery of files in swp directory.
+-	Modal editor
+	+	Vi normally starts in normal mode.
+	+	Insert mode: Must first enter insert mode to type.
+		*	`i`nsert
+		*	`a`ppend
+	+	Command mode: Allows editor commands and arguments.
+		*	: arguments
+		*	:w write
+		*	:q quit
+		*	:wq write and quit
+		*	:! shell command
+		*	:r run command and put stdout to file

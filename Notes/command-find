@@ -1,0 +1,7 @@
+find [link handling] [debug options] [depth] [search path top level] [expression]
+
+**expression breakdown**
+options for operation
+tests for t/f
+actions
+separated by operators, ``-and`` assumed by default

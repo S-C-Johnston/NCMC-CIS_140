@@ -1,0 +1,192 @@
+Programming
+===========
+(Howard rambles about cookies and compares recipes to programs)
+-	Nouns
+	+	Data types
+		*	Strings
+			Lettters.
+			In perl, treated abstractly.
+			In lower level languages, each letter occupies it's own piece of memory, and a string defines how many pieces to concatanate and read as a coherent value.
+		*	Ints
+			Whole numbers.
+		*	Floats
+			Floating point numbers, fractional/decimal.
+		*	Doubles
+			Double precision floating points, uses more data to handle more granular decimals.
+		*	Arrays (single dimension)
+			Can be of a certain type. Consecutive values in memory.
+			(usually) indexed from zero
+			The whole array is called with ``array[]``, while an individual value is called with the index of that value.
+			``array[3]`` is the fourth value in an array which is indexed from zero.
+			Individual values in an array can be mutated in the same way as normal variables, if they are called with their index. ``array[3] = foo``
+		*	Multi-dimensional arrays
+			Arrays which contain other arrays.
+			Can have many dimensions to them, where each array has another array and so on. 3 dimensions is about the maximum of practical use.
+			Individual values are called with [row][column]
+	+	Variables
+		*	Can be changed
+		*	Mutable
+	+	Constants
+		*	Cannot be changed
+		*	Immutable
+		*	Should be declared and initialized on the same line.
+	+	Scope
+		*	Lifetime of a value, variable or constant.
+			Generally within a block of code, like a method.
+			When the method is discarded from memory, the values go out of scope.
+		*	Local
+			Nouns restricted to the block in which they are declared.
+		*	Global
+			Nouns available throughout program.
+	+	Declaration v Initialization
+		*	Declaration opens up memory for a value. Null until initialized.
+		*	Initialization assigns value to a variable in memory.
+-	Verbs
+	+	Methods
+		*	Mutator methods
+			Designed to manipulate global variable.
+			One such method for each global var.
+		*	Worker methods
+			Do a thing w/o mutating.
+-	Structure
+	1	Comment header block
+		Pragmas
+	2	Global var declarations
+		(Continuing the cookie recipe analogy, which "ingredients" we want)
+		Global const declarations & inits
+	3	Dispatch
+		(Main method, calling methods listed elsewhere in sequence) 
+	4	Methods
+		(Mutators for each "ingredient")
+-	Control
+	+	Sequence
+		*	Blocks
+			Curly braces {} define start and end of a block.
+			Formatted such that } blockend is in the same column as the beginning of the method or block-caller.
+			Block content indented one tab.
+	+	Selection
+		*	If
+			Tests conditions for truth, does a thing if success.
+		*	Else if
+			Tests other conditions for truth if the first ``if`` statement fails. Executes its block if success.
+		*	Else
+			Default behavior if all prior ``if``/``else if`` statements fail.
+	+	Loops
+		*	While
+			Does a thing repeatedly while a tested condition is true.
+			Potential for infinite loops, so there needs to be a way to break the loop, automatically or otherwise.
+		*	For
+			Does a thing a certain number of times.
+			Potential for infinite looping, but that is specifically done, and breakout is built in.
+			Statement has three things: an int to test, the condition against which to test the int, and how to mutate the int when the loop runs. These are deliniated by semicolons.
+			Incrementor can change when the value is mutated. Prefix will mutate prior to running the loop, and postfix will mutate after running the loop.	
+			``for (;;) {someBlock}`` will run forever, because it will always be test true.
+		*	Foreach
+-	Formatting
+	+	camelCase
+		Has humps in the middle.
+		First letter lowercase, every following first letter of word uppercase.
+	+	PascalCase
+		Every word first letter is uppercase, else lowercase.
+	+	CONSTANT_NAMES
+		All caps, words separated w/ underscores.
+-	Conventions
+	+	Self-documenting code
+		Name is indicative of what the variable holds
+		Arrays, as they are plural and should be holding multiple of the same thing, should end with an "s" to indicate being plural. ``lastNames[]``
+		Avoid comments for this, unless the code is clever and warrants a stackoverflow reference/justification/etc
+		Method names should have verbs as shorthand of what they do.
+	+	Blocks
+		Most conventions hold that { blockStart should be on the same line as the declaration of, for example, the method. Alternative is to start a block in the same column on the following line. Similar flame/holy wars to emacs/vi preference or tabs/spaces.
+		``method fooBar {
+		  }``
+		vs
+		``method foobar
+		  {
+		  }``
+	+	Shorthand increment/decrement
+		*	var++
+			Increment a var by one.
+			Shorthand for var = var + 1
+		*	var--
+			Decrement a var by one.
+			Shorthand for var = var - 1
+		*	var+= someNum
+			Shorthand for var = var + somenum
+-	"Ten Commandments"
+	"Thou shalt have"
+	+	Self-documenting code
+	+	Prefer numeric data over string data
+	+	"Thou shalt have" NO MAGIC NUMBERS
+		Declare and init a constant to use in place of a hard-coded number.
+		Aids self-documentation, so the purpose of a number is known.
+		Prevents annoying work to change the values; just change the constant.
+	+	Consistent and proper style
+	+	Explicit over implicit
+	+	Prefer local over global
+	+	Validate, distill, & sanitize input
+	+	Limit recursion
+	+	Loose coupling and high cohesion
+	+	Practice algorithms
+-	Streams
+	+	STDIN
+		Normally the keyboard.
+		Can be piped from a file.
+		*	Validation and sanitization
+			Validate that input is within paramaters of what is needed, and sanitize input to prevent exception errors.
+	+	STDOUT
+		Normally the screen.
+		Can be piped to a file.
+	+	STDERR
+		Convention is to pipe it to a log file.
+	+	Everything is a stream of data, and files are just organized streams. Everything is a file because everything is a stream, just needs organizing. This is part of the unix philosophy. As such, special files exist for every device, like terminals, storage, displays, etc, and are really just streams of data.
+-	Conditions and logic
+	+	<	Less than
+	+	>	Greater than
+	+	>=	Greater than or equal to
+	+	<=	Less than or equal to
+	+	!=	Not-equal to
+	+	==	Equal to
+	+	===	Equal to w/ same type (javascript), it's really friggen' equal.
+	+	||	Logical or syntax sugar
+	+	&&	Logical and syntax sugar
+
+Pseudocode
+==========
+Declaring vars
+	``var fooBar;``
+	 type name  end-of-statement
+Declaring constants
+	``constant FOO_BAR = immutableValue;``
+	  type, name, initialization, value to permanently hold
+Defining methods
+	``method fooBar() {
+	 ..somecode & newlines.. 
+	  }``
+	  type, name&args, blockStart blockContent, blockEnd
+Mutator example
+	``method setLastName() {
+		print "Please enter last name: "
+		lastName = <STDIN>
+	  }``
+If example
+	``if(someTest) {
+		someCode
+	  }
+	  else if (someOtherTest) {
+		someOtherCode
+	  }
+	  else {
+		defaultAction
+	  }``
+While example
+	``while(someTest) {
+		someCode
+	  }``
+For example
+	``for(initNum; breakoutCondition; incrementor) {
+		someCode
+	  }``
+	@initNum: initializes an int for testing
+	@breakoutCondition: some test for truth to execute the loop, ``int < MAX``
+	@incrementor: increments or decrements the int every time the loop runs

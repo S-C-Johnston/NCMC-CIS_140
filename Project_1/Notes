@@ -1,0 +1,8 @@
+Recommended server system Cisco UCS.
+VoIP from Cisco as well, extra synergy from both.
+350 workstations, 800 users, on a VDI system.
+Hooked up to Storage area network.
+-	Climate control: find wattage to BTUs (British Thermal Units) with some added overhead, tonnage of cooling needed, redundant Air Conditioning which can both carry the full load.
+-	Redundant power: UPS which can carry the load of all critical equipment for >= 15 minutes. Generators behind that.
+-	Fire Handling: Fire rated doors, walls, intumescent sealant.
+-	Disaster prevention/handling: water aversion, location of conditioning units, ceiling loads

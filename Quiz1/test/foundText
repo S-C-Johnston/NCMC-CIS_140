@@ -1,0 +1,12 @@
+test/red/magenta/next/magentanext.bsh:1:echo This file is in folder magenta
+test/red/magenta/magenta.bsh:1:echo This file is in folder magenta
+test/red/red.bsh:1:echo This file is in folder red
+test/red/next/rednext.bsh:1:echo This file is in folder red
+test/blue/blue.bsh:1:echo This file is in folder blue
+test/blue/cyan/cyan.bsh:1:echo This file is in folder cyan
+test/blue/cyan/next/cyannext.bsh:1:echo This file is in folder cyan
+test/blue/next/bluenext.bsh:1:echo This file is in folder blue
+test/scripts:1:echo This file is in folder magenta
+test/scripts:2:echo This file is in folder red
+test/scripts:3:echo This file is in folder blue
+test/scripts:4:echo This file is in folder cyan
