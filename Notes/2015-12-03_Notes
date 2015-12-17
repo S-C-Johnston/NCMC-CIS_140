@@ -1,0 +1,19 @@
+**Perl**
+-	File I/O
+	+	Best practice for filehandles is to use all caps for the filehandles.
+		``FILEIN`` ``FILEOUT``
+	+	Can assign a filehandle to a unix filename, as a literal string
+	+	Best practice for file reading, see method at line 44 of WeekThirteen.pl
+-	Command line argument handling
+	+	If a command line argument is required:
+		Check if the argument exists
+		Check if the argument is valid ``(if -e $ARG)``
+-	Sorting an array
+	+	See method @ line 60 of WeekThirteen.pl
+-	Varied array fiddling
+	+	Push/pop: manipulate the end of an array. Suffix, appending, etc. "Pushes" to the end, "pops" from the end
+	+	unshift/shift: manipulate the beginning of an array. Prefix, prepending, etc. "shifts" array left/smaller, "unshifts" array opposite direction
+-	``Substr``
+	Substring
+	A function that returns a string from three arguments: a string, the index of the first character, and a count of how many characters from that index. 
+	Alternatively: an expression, an offset, a length
