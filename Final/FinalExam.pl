@@ -3,7 +3,7 @@
 ##Author: Stewart Johnston (Johnstons1@student.ncmich.edu)
 ##Assignment: Final Exam
 ##Purpose: Demonstrate mastery of perl as covered in class
-##Version: 0.1
+##Version: 0.2
 
 use 5.14.2;
 use warnings;
@@ -39,6 +39,8 @@ DBG_IDX_MDARRAY_DEPTH => 2,
 my @patientData;
 my @departmentCodes;
 
+#utils for my own shorthand.
+
 sub debugger {
 	my @localParms = @_;
 	if (DEBUG == TRUE && $localParms[0] =~ DBG_ARGS) {
@@ -71,24 +73,39 @@ sub debugger {
 				print "COLUMN: $j\n";
 				print "$callerElements[$i][$j]\n";
 			}
+			print "\n";
 		}
-		print "\n";
 	}
 }
 
+sub ascBySSN {
+	$a->[IDX_SS_NUM] cmp $b->[IDX_SS_NUM];
+}
+
+#actual meat of the program.
+
 sub main {
-	populateDataArrays();
+	populateDataArrays(); 
+	sortArrayByMthd(\@patientData,\&ascBySSN);
 }
 
 sub populateDataArrays {
 	retrieveRecords(PATIENT_DATA,\@patientData);
-	debugger(DBG_MDARRAY,scalar @patientData,scalar @{$patientData[0]},@patientData);
+	#debugger(DBG_MDARRAY,scalar @patientData,scalar @{$patientData[0]},@patientData);
 	retrieveRecords(DEPARTMENT_DATA,\@departmentCodes);
-	debugger(DBG_MDARRAY,scalar @departmentCodes,scalar @{$departmentCodes[0]},@departmentCodes);
+	#debugger(DBG_MDARRAY,scalar @departmentCodes,scalar @{$departmentCodes[0]},@departmentCodes);
+}
+
+sub sortArrayByMthd {
+	my $arrayHandle=$_[0];
+	my $sortMethod=$_[1];
+	#debugger(DBG_MDARRAY,scalar @{$arrayHandle},scalar @{$arrayHandle->[0]},@{$arrayHandle});
+	@{$arrayHandle} = sort { &$sortMethod() } @{$arrayHandle};
+	#debugger(DBG_MDARRAY,scalar @{$arrayHandle},scalar @{$arrayHandle->[0]},@{$arrayHandle});
 }
 
 sub retrieveRecords {
-	debugger(DBG_ARGS,@_);
+	#debugger(DBG_ARGS,@_);
 	my $IN_FILE=$_[0];
 	my $arrayHandle=$_[1];
 	open (my $IN, '<', $IN_FILE);
@@ -98,7 +115,7 @@ sub retrieveRecords {
 		@readerArray = split(/,/);
 		for (my $i = 0; $i < scalar(@readerArray); $i++) {
 			chomp($arrayHandle->[$counter][$i] = "$readerArray[$i]");
-			debugger(DBG_ARGS,"ROW: $counter","COLUMN: $i","$arrayHandle->[$counter][$i]","$readerArray[$i]");
+			#debugger(DBG_ARGS,"ROW: $counter","COLUMN: $i","$arrayHandle->[$counter][$i]","$readerArray[$i]");
 		}
 		$counter++;
 	}
