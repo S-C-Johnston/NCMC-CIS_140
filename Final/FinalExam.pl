@@ -3,7 +3,7 @@
 ##Author: Stewart Johnston (Johnstons1@student.ncmich.edu)
 ##Assignment: Final Exam
 ##Purpose: Demonstrate mastery of perl as covered in class
-##Version: 0.3
+##Version: 0.3.1
 
 use 5.14.2;
 use warnings;
@@ -126,11 +126,11 @@ sub getSocialSecNum {
 	my $inputValid = 0;
 	do {
 		chomp ($dirtyInput = <STDIN>);
-		debugger(DBG_VARS,"$dirtyInput");
+#		debugger(DBG_VARS,"$dirtyInput");
 		if ($dirtyInput =~ /^[\d]{2,3}-?[\d]{0,2}-?[\d]{0,4}$/) {
 			$cleanInput = $dirtyInput;
 		} 
-		debugger(DBG_VARS,"$cleanInput","$dirtyInput");
+#		debugger(DBG_VARS,"$cleanInput","$dirtyInput");
 		if (defined $cleanInput && $cleanInput eq $dirtyInput) {
 			print "Input accepted.\n";
 			$inputValid = TRUE;
@@ -148,16 +148,17 @@ sub getSocialSecNum {
 
 sub setContinueInt {
 	my $usePrompt = $_[0];
-	#my $prompt = $_[1];
+#	my $prompt = $_[1];
 	$continueInt = -1;
 	if ($usePrompt eq USE_PROMPT) {
-	#	if (!defined $prompt) {
-			print "Do you want to continue? (" . TRUE . ":Yes 0:No): ";
-			$continueInt = getNumInput(0,TRUE);
-	#	}
-	#	elsif (defined $prompt) {
-	#		print "$prompt";
-	#	}
+#		if (!defined $prompt) {
+		print "Do you want to continue? (" . TRUE . ":Yes 0:No): ";
+		$continueInt = getNumInput(0,TRUE);
+		print "Confirmed, continuing.\n";
+#		}
+#		elsif (defined $prompt) {
+#			print "$prompt";
+#		}
 	}
 	return $continueInt;
 }
@@ -170,9 +171,9 @@ sub getNumInput {
 	my $inputValid = 0;
 	do {
 		chomp ($dirtyInput = <STDIN>);
-		debugger(DBG_VARS,"$dirtyInput");
+#		debugger(DBG_VARS,"$dirtyInput");
 		$cleanInput = validateNum($dirtyInput,$rangeMin,$rangeMax);
-		debugger(DBG_VARS,"$cleanInput,$dirtyInput");
+#		debugger(DBG_VARS,"$cleanInput,$dirtyInput");
 		if (defined $cleanInput && $cleanInput eq $dirtyInput) {
 			print "Input accepted.\n";
 			$inputValid = TRUE;
@@ -187,7 +188,7 @@ sub getNumInput {
 }
 	
 sub validateNum {
-	debugger(DBG_ARGS,@_);
+#	debugger(DBG_ARGS,@_);
 	my $dirtyInput = $_[0];
 	my $rangeMin = $_[1]; #these are inclusive
 	my $rangeMax = $_[2];
@@ -203,21 +204,21 @@ sub validateNum {
 
 sub populateDataArrays {
 	retrieveRecords(PATIENT_DATA,\@patientData);
-	#debugger(DBG_MDARRAY,scalar @patientData,scalar @{$patientData[0]},@patientData);
+#	debugger(DBG_MDARRAY,scalar @patientData,scalar @{$patientData[0]},@patientData);
 	retrieveRecords(DEPARTMENT_DATA,\@departmentCodes);
-	#debugger(DBG_MDARRAY,scalar @departmentCodes,scalar @{$departmentCodes[0]},@departmentCodes);
+#	debugger(DBG_MDARRAY,scalar @departmentCodes,scalar @{$departmentCodes[0]},@departmentCodes);
 }
 
 sub sortArrayByMthd {
 	my $arrayHandle=$_[0];
 	my $sortMethod=$_[1];
-	#debugger(DBG_MDARRAY,scalar @{$arrayHandle},scalar @{$arrayHandle->[0]},@{$arrayHandle});
+#	debugger(DBG_MDARRAY,scalar @{$arrayHandle},scalar @{$arrayHandle->[0]},@{$arrayHandle});
 	@{$arrayHandle} = sort { &$sortMethod() } @{$arrayHandle};
-	#debugger(DBG_MDARRAY,scalar @{$arrayHandle},scalar @{$arrayHandle->[0]},@{$arrayHandle});
+#	debugger(DBG_MDARRAY,scalar @{$arrayHandle},scalar @{$arrayHandle->[0]},@{$arrayHandle});
 }
 
 sub retrieveRecords {
-	#debugger(DBG_ARGS,@_);
+#	debugger(DBG_ARGS,@_);
 	my $IN_FILE=$_[0];
 	my $arrayHandle=$_[1];
 	open (my $IN, '<', $IN_FILE);
@@ -227,7 +228,7 @@ sub retrieveRecords {
 		@readerArray = split(/,/);
 		for (my $i = 0; $i < scalar(@readerArray); $i++) {
 			chomp($arrayHandle->[$counter][$i] = "$readerArray[$i]");
-			#debugger(DBG_ARGS,"ROW: $counter","COLUMN: $i","$arrayHandle->[$counter][$i]","$readerArray[$i]");
+#			debugger(DBG_ARGS,"ROW: $counter","COLUMN: $i","$arrayHandle->[$counter][$i]","$readerArray[$i]");
 		}
 		$counter++;
 	}
