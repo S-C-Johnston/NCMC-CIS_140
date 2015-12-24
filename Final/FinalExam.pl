@@ -3,7 +3,7 @@
 ##Author: Stewart Johnston (Johnstons1@student.ncmich.edu)
 ##Assignment: Final Exam
 ##Purpose: Demonstrate mastery of perl as covered in class
-##Version: 0.3.4
+##Version: 0.3.4.1
 
 use 5.14.2;
 use warnings;
@@ -164,9 +164,6 @@ sub setContinueInt {
 		do {
 			my $userPrompt = "Do you want to continue? (" . TRUE . ":Yes 0:No): ";
 			print $userPrompt;
-			if ($continueInt eq TRUE) {
-				print $userPrompt; #In case of successful recursion, this value already set.
-			}
 			$continueInt = getNumInput(0,TRUE);
 			if ($continueInt eq TRUE) {
 				print "Confirmed, continuing.\n"; 
@@ -181,12 +178,12 @@ sub setContinueInt {
 }
 
 sub modRecurseCounter {
-	$modifierInt = $_[0];
+	my $modifierInt = $_[0];
 	if (defined $modifierInt) {
 		$recurseCounter += $modifierInt;
 	}
 	else {
-		$recureCounter = 0;
+		$recurseCounter = 0;
 	}
 }
 
