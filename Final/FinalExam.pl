@@ -3,7 +3,7 @@
 ##Author: Stewart Johnston (Johnstons1@student.ncmich.edu)
 ##Assignment: Final Exam
 ##Purpose: Demonstrate mastery of perl as covered in class
-##Version: 0.3.1
+##Version: 0.3.2
 
 use 5.14.2;
 use warnings;
@@ -42,11 +42,12 @@ MENU_ONE => 1,
 MENU_EXIT => 0,
 };
 
+use constant USE_PROMPT => TRUE;
+
 my @patientData;
 my @departmentCodes;
 
 my $continueInt;
-use constant USE_PROMPT => TRUE;
 
 #utils for my own shorthand.
 
@@ -154,7 +155,9 @@ sub setContinueInt {
 #		if (!defined $prompt) {
 		print "Do you want to continue? (" . TRUE . ":Yes 0:No): ";
 		$continueInt = getNumInput(0,TRUE);
-		print "Confirmed, continuing.\n";
+		if ($continueInt eq TRUE) {
+			print "Confirmed, continuing.\n"; 
+		}
 #		}
 #		elsif (defined $prompt) {
 #			print "$prompt";
