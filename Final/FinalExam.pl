@@ -3,7 +3,7 @@
 ##Author: Stewart Johnston (Johnstons1@student.ncmich.edu)
 ##Assignment: Final Exam
 ##Purpose: Demonstrate mastery of perl as covered in class
-##Version: 0.3.4.1
+##Version: 0.4
 
 use 5.14.2;
 use warnings;
@@ -49,7 +49,7 @@ my @departmentCodes;
 
 my $continueInt;
 
-my $recurseCounter;
+my $recurseCounter = 0;
 use constant RECURSE_MAX => 5;
 
 #utils for my own shorthand.
@@ -107,32 +107,46 @@ sub main {
 		menu();
 		setContinueInt(USE_PROMPT);
 	} while ($continueInt eq TRUE);
+	print "Thank you for using this software. The program will now exit.\n";
+	print "Please create a support ticket if you encounter problems.\n";
 }
 
 sub menu {
 	my $menuPromptRoot = "Search for patient records by Social Security Number (1), or exit (0)\n? ";
 	print $menuPromptRoot;
-	my $menuSelection = getNumInput(MENU_EXIT,MENU_ONE); 
+	my $menuSelection = getNumInput(MENU_EXIT,MENU_ONE,$menuPromptRoot); 
 	if ($menuSelection eq MENU_ONE) {
 		my $menuPromptBranchA = "Please enter Social Security Number for query: ";
 		print $menuPromptBranchA;
-		my $querySSN = getSocialSecNum(); 
+		my $querySSN = getSocialSecNum($menuPromptBranchA); 
 		if ($querySSN eq 0) {
 			return 0;
 		}
 	}
 	elsif ($menuSelection eq MENU_EXIT) {
-		die "Exiting program.";
+		die "Exiting program.\n";
+	}
+}
+
+sub reprintPrompt {
+	my $userPrompt = $_[0];
+	if (defined $userPrompt && $continueInt eq TRUE) {
+		print "$userPrompt";
 	}
 }
 
 sub getSocialSecNum {
+	my $userPrompt = $_[0];
 	my $dirtyInput;
 	my $cleanInput;
 	my $inputValid = 0;
 	modRecurseCounter();
+	setContinueInt();
 	do {
 		checkRecurseCounter();
+		if (defined $userPrompt) {
+			reprintPrompt($userPrompt);
+		}
 		chomp ($dirtyInput = <STDIN>);
 #		debugger(DBG_VARS,"$dirtyInput");
 		if ($dirtyInput =~ /^[\d]{2,3}-?[\d]{0,2}-?[\d]{0,4}$/) {
@@ -140,15 +154,15 @@ sub getSocialSecNum {
 		} 
 #		debugger(DBG_VARS,"$cleanInput","$dirtyInput");
 		if (defined $cleanInput && $cleanInput eq $dirtyInput) {
-			print "Input accepted.\n";
+			print "\nInput accepted.\n";
 			$inputValid = TRUE;
 		}
 		else {
-			print "Input rejected. Input either not a social security number or not properly formatted.\n";
+			print "\nInput rejected. Input either not a social security number or not properly formatted.\n";
 			print "Social Security Number format is nnn-nn-nnnn, where \"n\" is a digit.\n";
 			print "Partial Social Security Numbers also work, and one may omit the \"-\".\n";
 			$inputValid = 0;
-			setContinueInt(USE_PROMPT);
+			$cleanInput = setContinueInt(USE_PROMPT);
 			modRecurseCounter(1);
 		}
 	} until ($inputValid eq TRUE || $continueInt eq 0);
@@ -159,12 +173,13 @@ sub setContinueInt {
 	my $promptUser = $_[0];
 #	my $prompt = $_[1];
 	$continueInt = -1;
-	if ($promptUser eq USE_PROMPT) {
+	if ($promptUser && $promptUser eq USE_PROMPT) {
 #		if (!defined $prompt) {
 		do {
+			checkRecurseCounter();
 			my $userPrompt = "Do you want to continue? (" . TRUE . ":Yes 0:No): ";
 			print $userPrompt;
-			$continueInt = getNumInput(0,TRUE);
+			$continueInt = getNumInput(0,TRUE,$userPrompt);
 			if ($continueInt eq TRUE) {
 				print "Confirmed, continuing.\n"; 
 			}
@@ -178,16 +193,25 @@ sub setContinueInt {
 }
 
 sub modRecurseCounter {
+	if (@_) {
+#		debugger(DBG_ARGS,@_);
+	}
 	my $modifierInt = $_[0];
-	if (defined $modifierInt) {
+	if (defined $modifierInt && $modifierInt =~ /[\d]+/) {
+#		debugger(DBG_VARS,"recurseCounter pre-mod",$recurseCounter);
+#		debugger(DBG_VARS,"recurseCounter modifier",$modifierInt);
 		$recurseCounter += $modifierInt;
+#		debugger(DBG_VARS,"recurseCounter post-mod",$recurseCounter);
 	}
 	else {
+#		debugger(DBG_VARS,"recurseCounter pre-reset",$recurseCounter);
 		$recurseCounter = 0;
+#		debugger(DBG_VARS,"recurseCounter post-reset",$recurseCounter);
 	}
 }
 
 sub checkRecurseCounter {
+#	debugger(DBG_VARS,"recurseCounter during check",$recurseCounter);
 	if ($recurseCounter >= RECURSE_MAX) {
 		die "Too many bad tries. Exiting.";
 	}
@@ -196,11 +220,15 @@ sub checkRecurseCounter {
 sub getNumInput {
 	my $rangeMin = $_[0];
 	my $rangeMax = $_[1];
+	my $userPrompt = $_[2];
 	my $dirtyInput;
 	my $cleanInput;
 	my $inputValid = 0;
+	setContinueInt();
 	do {
-		checkRecurseCounter();
+		if (defined $userPrompt) {
+			reprintPrompt($userPrompt);
+		}
 		chomp ($dirtyInput = <STDIN>);
 #		debugger(DBG_VARS,"$dirtyInput");
 		$cleanInput = validateNum($dirtyInput,$rangeMin,$rangeMax);
@@ -212,8 +240,9 @@ sub getNumInput {
 		else {
 			print "Input rejected. Input either not a number or out of range. Range is $rangeMin - $rangeMax\n";
 			$inputValid = 0;
-			$cleanInput = setContinueInt(USE_PROMPT);
+			checkRecurseCounter();
 			modRecurseCounter(1);
+			$cleanInput = setContinueInt(USE_PROMPT);
 		}
 	} until ($inputValid eq TRUE || $continueInt eq 0);
 	return $cleanInput;
