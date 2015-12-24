@@ -3,7 +3,7 @@
 ##Author: Stewart Johnston (Johnstons1@student.ncmich.edu)
 ##Assignment: Final Exam
 ##Purpose: Demonstrate mastery of perl as covered in class
-##Version: 0.3.2
+##Version: 0.3.4
 
 use 5.14.2;
 use warnings;
@@ -48,6 +48,9 @@ my @patientData;
 my @departmentCodes;
 
 my $continueInt;
+
+my $recurseCounter;
+use constant RECURSE_MAX => 5;
 
 #utils for my own shorthand.
 
@@ -97,6 +100,7 @@ sub ascBySSN {
 #actual meat of the program.
 
 sub main {
+	modRecurseCounter();
 	populateDataArrays(); 
 	sortArrayByMthd(\@patientData,\&ascBySSN);
 	do {
@@ -106,11 +110,12 @@ sub main {
 }
 
 sub menu {
-	print "Search for patient records by Social Security Number (1), or exit (0)\n";
-	print "? ";
+	my $menuPromptRoot = "Search for patient records by Social Security Number (1), or exit (0)\n? ";
+	print $menuPromptRoot;
 	my $menuSelection = getNumInput(MENU_EXIT,MENU_ONE); 
 	if ($menuSelection eq MENU_ONE) {
-		print "Please enter Social Security Number for query: ";
+		my $menuPromptBranchA = "Please enter Social Security Number for query: ";
+		print $menuPromptBranchA;
 		my $querySSN = getSocialSecNum(); 
 		if ($querySSN eq 0) {
 			return 0;
@@ -125,7 +130,9 @@ sub getSocialSecNum {
 	my $dirtyInput;
 	my $cleanInput;
 	my $inputValid = 0;
+	modRecurseCounter();
 	do {
+		checkRecurseCounter();
 		chomp ($dirtyInput = <STDIN>);
 #		debugger(DBG_VARS,"$dirtyInput");
 		if ($dirtyInput =~ /^[\d]{2,3}-?[\d]{0,2}-?[\d]{0,4}$/) {
@@ -142,28 +149,51 @@ sub getSocialSecNum {
 			print "Partial Social Security Numbers also work, and one may omit the \"-\".\n";
 			$inputValid = 0;
 			setContinueInt(USE_PROMPT);
+			modRecurseCounter(1);
 		}
 	} until ($inputValid eq TRUE || $continueInt eq 0);
 	return $cleanInput; 
 }
 
 sub setContinueInt {
-	my $usePrompt = $_[0];
+	my $promptUser = $_[0];
 #	my $prompt = $_[1];
 	$continueInt = -1;
-	if ($usePrompt eq USE_PROMPT) {
+	if ($promptUser eq USE_PROMPT) {
 #		if (!defined $prompt) {
-		print "Do you want to continue? (" . TRUE . ":Yes 0:No): ";
-		$continueInt = getNumInput(0,TRUE);
-		if ($continueInt eq TRUE) {
-			print "Confirmed, continuing.\n"; 
-		}
+		do {
+			my $userPrompt = "Do you want to continue? (" . TRUE . ":Yes 0:No): ";
+			print $userPrompt;
+			if ($continueInt eq TRUE) {
+				print $userPrompt; #In case of successful recursion, this value already set.
+			}
+			$continueInt = getNumInput(0,TRUE);
+			if ($continueInt eq TRUE) {
+				print "Confirmed, continuing.\n"; 
+			}
+		} until ($continueInt eq TRUE || $continueInt eq 0);
 #		}
 #		elsif (defined $prompt) {
 #			print "$prompt";
 #		}
 	}
 	return $continueInt;
+}
+
+sub modRecurseCounter {
+	$modifierInt = $_[0];
+	if (defined $modifierInt) {
+		$recurseCounter += $modifierInt;
+	}
+	else {
+		$recureCounter = 0;
+	}
+}
+
+sub checkRecurseCounter {
+	if ($recurseCounter >= RECURSE_MAX) {
+		die "Too many bad tries. Exiting.";
+	}
 }
 
 sub getNumInput {
@@ -173,6 +203,7 @@ sub getNumInput {
 	my $cleanInput;
 	my $inputValid = 0;
 	do {
+		checkRecurseCounter();
 		chomp ($dirtyInput = <STDIN>);
 #		debugger(DBG_VARS,"$dirtyInput");
 		$cleanInput = validateNum($dirtyInput,$rangeMin,$rangeMax);
@@ -185,6 +216,7 @@ sub getNumInput {
 			print "Input rejected. Input either not a number or out of range. Range is $rangeMin - $rangeMax\n";
 			$inputValid = 0;
 			$cleanInput = setContinueInt(USE_PROMPT);
+			modRecurseCounter(1);
 		}
 	} until ($inputValid eq TRUE || $continueInt eq 0);
 	return $cleanInput;
