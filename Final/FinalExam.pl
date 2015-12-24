@@ -3,7 +3,7 @@
 ##Author: Stewart Johnston (Johnstons1@student.ncmich.edu)
 ##Assignment: Final Exam
 ##Purpose: Demonstrate mastery of perl as covered in class
-##Version: 0.4.1
+##Version: 0.5
 
 use 5.14.2;
 use warnings;
@@ -251,19 +251,33 @@ sub retrieveRecords {
 }
 
 sub menu {
-	my $menuPromptRoot = "Search for patient records by Social Security Number (1), or exit (0)\n? ";
+	my $menuPromptRoot = "Search for patient records by Social Security Number (" .  MENU_ONE . "), or exit (" . MENU_EXIT . ")\n? ";
 	print $menuPromptRoot;
 	my $menuSelection = getNumInput(MENU_EXIT,MENU_ONE,$menuPromptRoot); 
 	if ($menuSelection eq MENU_ONE) {
-		my $menuPromptBranchA = "Please enter Social Security Number for query: ";
-		print $menuPromptBranchA;
-		my $querySSN = getSocialSecNum($menuPromptBranchA); 
-		if ($querySSN eq 0) {
-			return 0;
-		}
+		menuSelectionSSN();
 	}
 	elsif ($menuSelection eq MENU_EXIT) {
 		die "Exiting program.\n";
+	}
+}
+
+sub menuSelectionSSN {
+	my $menuPromptBranchA = "Please enter Social Security Number for query: ";
+	print $menuPromptBranchA;
+	my $querySSN = getSocialSecNum($menuPromptBranchA); 
+	if ($querySSN eq 0) {
+		return 0;
+	}
+	my $queryReturn = queryPatientDataSSN($querySSN);
+#	debugger(DBG_VARS,$queryReturn);
+	my @matchedRecords = ();
+	unless ($queryReturn eq $querySSN) {
+		@matchedRecords = @{$queryReturn};
+#		debugger(DBG_MDARRAY,scalar @matchedRecords, scalar @{$matchedRecords[0]},@matchedRecords);
+	}
+	else {
+		print "\nNo matches found.\n";
 	}
 }
 
@@ -299,6 +313,28 @@ sub getSocialSecNum {
 		}
 	} until ($inputValid eq TRUE || $continueInt eq 0);
 	return $cleanInput; 
+}
+
+sub queryPatientDataSSN {
+#	debugger(DBG_ARGS,@_);
+	my $querySSN = $_[0];
+	my @matchedRecords = ();
+	foreach my $item (@patientData) {
+#		debugger(DBG_ARRAY,scalar @{$item},@{$item});
+#		debugger(DBG_VARS,$item->[IDX_SS_NUM]);
+#		debugger(DBG_VARS,($item->[IDX_SS_NUM] =~ s/-//gr));
+#		debugger(DBG_VARS,($querySSN =~ s/-//gr));
+		if (($item->[IDX_SS_NUM] =~ s/-//gr) =~ ($querySSN =~ s/-//gr)) {
+			push(@matchedRecords,$item);
+		}
+	}
+	if ((scalar @matchedRecords) eq 0) {
+		return $querySSN;
+	}
+	if (@matchedRecords) {
+#		debugger(DBG_MDARRAY,scalar @matchedRecords, scalar @{$matchedRecords[0]},@matchedRecords);
+	}
+	return(\@matchedRecords);
 }
 
 main();
