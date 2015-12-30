@@ -3,7 +3,7 @@
 ##Author: Stewart Johnston (Johnstons1@student.ncmich.edu)
 ##Assignment: Final Exam
 ##Purpose: Demonstrate mastery of perl as covered in class
-##Version: 0.7.1
+##Version: 0.8
 
 use 5.14.2;
 use warnings;
@@ -209,7 +209,7 @@ sub setContinueInt { ##setContinueInt( [USE_PROMPT] )
 
 #Sorting schemes.
 
-sub sortArrayByMthd { ##sortArrayByMthd( \@array, sortMethod, $sortField )
+sub sortArrayByMthd { ##sortArrayByMthd( \@array, &sortMethod, $sortField )
 	my $arrayHandle = $_[0];
 	my $sortMethod = $_[1];
 	my $sortField = $_[2];
@@ -290,18 +290,16 @@ sub menuSelectionSSN {
 	}
 	my $queryReturn = queryPatientDataSSN($querySSN);
 #	debugger(DBG_VARS,$queryReturn);
-	my @matchedRecords = ();
+	my @matchingRecords = ();
 	unless ($queryReturn eq $querySSN) {
-		@matchedRecords = @{$queryReturn};
-		foreach my $item (@matchedRecords) {
-		}
-#		debugger(DBG_MDARRAY,scalar @matchedRecords, scalar @{$matchedRecords[0]},@matchedRecords);
+		@matchingRecords = @{$queryReturn};
+#		debugger(DBG_MDARRAY,scalar @matchingRecords, scalar @{$matchingRecords[0]},@matchingRecords);
 	}
 	else {
 		print "\nNo matches found.\n";
 	}
-	#formatMatchedRecords();
-	#printFormattedMatchedRecords();
+	#formatMatchingRecords();
+	#printFormattedMatchingRecords();
 }
 
 sub getSocialSecNum {
@@ -341,34 +339,37 @@ sub getSocialSecNum {
 sub queryPatientDataSSN { ##queryPatientDataSSN( $querySSN )
 #	debugger(DBG_ARGS,@_);
 	my $querySSN = $_[0];
-	my @matchedRecords = ();
+	my @matchingRecords = ();
 	foreach my $patientRecord (@patientData) {
 #		debugger(DBG_ARRAY,scalar @{$patientRecord},@{$patientRecord});
 #		debugger(DBG_VARS,$patientRecord->[IDX_SS_NUM]);
 #		debugger(DBG_VARS,($patientRecord->[IDX_SS_NUM] =~ s/-//gr));
 #		debugger(DBG_VARS,($querySSN =~ s/-//gr));
 		if (($patientRecord->[IDX_SS_NUM] =~ s/-//gr) =~ ($querySSN =~ s/-//gr)) {
-			push(@matchedRecords,$patientRecord);
+			push(@matchingRecords,$patientRecord);
 		}
 	}
-	if ((scalar @matchedRecords) eq 0) {
+	if ((scalar @matchingRecords) eq 0) {
 		return $querySSN;
 	}
-	if (@matchedRecords) {
-#		debugger(DBG_MDARRAY,scalar @matchedRecords, scalar @{$matchedRecords[0]},@matchedRecords);
+	if (@matchingRecords) {
+#		debugger(DBG_MDARRAY,scalar @matchingRecords, scalar @{$matchingRecords[0]},@matchingRecords);
 	}
-	return(\@matchedRecords);
+	return(\@matchingRecords);
 }
 
-sub formatMatchedRecords { ##formatPatientRecords( @matchedRecords )
-	my @matchedRecords = $_[0];
+sub formatMatchingRecords { ##formatPatientRecords( @matchingRecords )
 	debugger(DBG_ARGS,@_);
-	foreach my $record (@matchedRecords) {
+	my @matchingRecords = $_[0];
+	foreach my $record (@matchingRecords) {
 		my $primeDept = $record->[IDX_PRIME_DEPT];
 		$record->[IDX_PRIME_DEPT] = returnDeptCodes($primeDept);
 	}
-	my $uniqueSSN = buildUniqueSSNs(@matchedRecords);
-	my $uniqueDept;
+	my @uniqueSSNs = buildUniqueSSNs(@matchingRecords);
+	foreach my $SSN (@uniqueSSNs) {
+		$sortSSNsByDept($SSN,@matchingRecords);
+		
+	}
 }
 
 sub returnDeptCodes { ##returnDeptCodes( $deptCode )
@@ -382,10 +383,10 @@ sub returnDeptCodes { ##returnDeptCodes( $deptCode )
 	return $deptCode;
 }
 
-sub buildUniqueSSNs { ##buildUniqueSSNs( @modifiedMatchedRecords )
-	my @matchedRecords = $_[0];
+sub buildUniqueSSNs { ##buildUniqueSSNs( @modifiedMatchingRecords )
+	my @matchingRecords = $_[0];
 	my @uniqueSSNs = ();
-	foreach my $record (@matchedRecords) {
+	foreach my $record (@matchingRecords) {
 		my $isUniqueSSN = 0;
 		if (@uniqueSSNs) {
 			foreach my $SSN (@uniqueSSNs) {
@@ -404,7 +405,60 @@ sub buildUniqueSSNs { ##buildUniqueSSNs( @modifiedMatchedRecords )
 	return(\@uniqueSSNs);
 }
 
-sub printFormattedMatchedRecords { ##printFormattedMatchedRecords( @formattedPatientRecords )
+sub sortSSNsByDept { ##formatDeptOwedTotals( $SSN, @matchingRecords )
+	my $SSN = $_[0];
+	my @matchingRecords = $_[1];
+	my $sortSliceOffset;
+	my $sortSliceLength = 0;
+	my $firstMatchedRecord;
+	while (my ($i,$record) = each @matchingRecords) {
+		if ($record->[IDX_SS_NUM] eq $SSN) { 
+			if (! defined $sortSliceOffset && defined $firstMatchedRecord) {
+				$sortSliceOffset = $i;
+			}
+			if (defined $sortSliceOffset) {
+				$sortSliceLength += 1;
+			}
+			if (! defined $firstMatchedRecord) {
+				$firstMatchedRecord = $i;
+			}
+	}
+	splice(@matchingRecords, $sortSliceOffset, $sortSliceLength, sortArrayByMthd(@matchingRecords[$sortSliceOffset,$sortSliceLength],&ascAlphaByField,IDX_PRIME_DEPT));
+}
+
+
+sub formatDeptOwedTotals { ##formatDeptOwedTotals( $SSN, @matchingRecords )
+	my $SSN = $_[0];
+	my @matchingRecords = $_[1];
+	my $spliceOffset;
+	my $spliceLength = 0;
+	my $firstMatchedRecord;
+	my $department;
+	my $owedTotal = 0;
+	while (my ($i,$record) = each @matchingRecords) {
+		if ($record->[IDX_SS_NUM] eq $SSN) { 
+			if (! defined $spliceOffset && defined $matchedRecord) {
+				$spliceOffset = $i;
+			}
+			if (defined $spliceOffset) {
+				$spliceLength += 1;
+			}
+			if (! defined $department) {
+				$department = $record->[IDX_PRIME_DEPT];
+			}
+			elsif ($department ne $record->[IDX_PRIME_DEPT]) {
+				$department = $record->[IDX_PRIME_DEPT];
+			}
+			if (! defined $firstMatchedRecord) {
+				$firstMatchedRecord = $i;
+			}
+		}
+		if (! defined $spliceOffset) {
+		}
+	}
+}
+
+sub printFormattedMatchingRecords { ##printFormattedMatchingRecords( @formattedPatientRecords )
 }
 
 main();
