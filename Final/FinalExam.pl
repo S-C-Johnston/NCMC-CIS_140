@@ -3,7 +3,7 @@
 ##Author: Stewart Johnston (Johnstons1@student.ncmich.edu)
 ##Assignment: Final Exam
 ##Purpose: Demonstrate mastery of perl as covered in class
-##Version: 0.7
+##Version: 0.7.1
 
 use 5.14.2;
 use warnings;
@@ -270,7 +270,14 @@ sub retrieveRecords { ##retrieveRecords( filename.csv, \@array )
 
 sub menu {
 	my $menuPromptRoot = "Search for patient records by Social Security Number (" .  MENU_ONE . "), or exit (" . MENU_EXIT . ")\n? ";
-	print $menuPromptRoot; my $menuSelection = getNumInput(MENU_EXIT,MENU_ONE,$menuPromptRoot); if ($menuSelection eq MENU_ONE) { menuSelectionSSN(); } elsif ($menuSelection eq MENU_EXIT) { die "Exiting program.\n";
+	print $menuPromptRoot;
+	my $menuSelection = getNumInput(MENU_EXIT,MENU_ONE,$menuPromptRoot); 
+	if ($menuSelection eq MENU_ONE) {
+		menuSelectionSSN(); 
+	} 
+	elsif ($menuSelection eq MENU_EXIT) 
+	{ 
+		die "Exiting program.\n";
 	}
 }
 
