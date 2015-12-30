@@ -3,7 +3,7 @@
 ##Author: Stewart Johnston (Johnstons1@student.ncmich.edu)
 ##Assignment: Final Exam
 ##Purpose: Demonstrate mastery of perl as covered in class
-##Version: 0.5
+##Version: 0.7
 
 use 5.14.2;
 use warnings;
@@ -26,6 +26,11 @@ IDX_NAME_F => 1,
 IDX_PRIME_DEPT => 2,
 IDX_OWED_AMOUNT => 3,
 IDX_SS_NUM => 4,
+};
+
+use constant {
+IDX_DEPARTMENT => 0,
+IDX_OWED_TO_DEPT => 1,
 };
 
 use constant {
@@ -56,6 +61,7 @@ use constant RECURSE_MAX => 5;
 
 sub debugger {
 	my @localParms = @_;
+	##debugger( KEYWORD, Arguments/Variables )
 	if (DEBUG eq TRUE && $localParms[0] =~ DBG_ARGS || $localParms[0] =~ DBG_VARS) {
 		my @callerArgs = @localParms;
 		print "$callerArgs[0]:\n";
@@ -67,6 +73,8 @@ sub debugger {
 		}
 		print "\n";
 	}
+	##debugger( KEYWORD, Array Length, [mdarray depth], Array )
+	##array length and depth as scalars, array as... array. Duh.
 	if (DEBUG eq TRUE && $localParms[0] =~ DBG_ARRAY) {
 		my @callerElements = @localParms;
 		print "$callerElements[0]:\n";
@@ -93,14 +101,16 @@ sub debugger {
 	}
 }
 
-sub reprintPrompt {
+sub reprintPrompt { ##reprintPrompt( promptToReprint )
+	##Non-obvious function. Primarily just shorthand for the logic to
+	##reprint a prompt if a validation fails and setContinueInt() is called.
 	my $userPrompt = $_[0];
 	if (defined $userPrompt && $continueInt eq TRUE) {
 		print "$userPrompt";
 	}
 }
 
-sub getNumInput {
+sub getNumInput { ##getNumInput( range floor, range cieling, prompt for user )
 	my $rangeMin = $_[0];
 	my $rangeMax = $_[1];
 	my $userPrompt = $_[2];
@@ -131,7 +141,7 @@ sub getNumInput {
 	return $cleanInput;
 }
 	
-sub validateNum {
+sub validateNum { ##validateNum( input to validate, range floor, range cieling )
 #	debugger(DBG_ARGS,@_);
 	my $dirtyInput = $_[0];
 	my $rangeMin = $_[1]; #these are inclusive
@@ -148,7 +158,8 @@ sub validateNum {
 
 #Global variable handlers.
 
-sub modRecurseCounter {
+sub modRecurseCounter { ##modRecurseCounter( [positive or negative value to modify the recursion counter] )
+			##No args resets the recursion counter.
 	if (@_) {
 #		debugger(DBG_ARGS,@_);
 	}
@@ -166,14 +177,14 @@ sub modRecurseCounter {
 	}
 }
 
-sub checkRecurseCounter {
+sub checkRecurseCounter { 
 #	debugger(DBG_VARS,"recurseCounter during check",$recurseCounter);
 	if ($recurseCounter >= RECURSE_MAX) {
 		die "Too many bad tries. Exiting.";
 	}
 }
 
-sub setContinueInt {
+sub setContinueInt { ##setContinueInt( [USE_PROMPT] )
 	my $promptUser = $_[0];
 #	my $prompt = $_[1];
 	$continueInt = -1;
@@ -198,16 +209,23 @@ sub setContinueInt {
 
 #Sorting schemes.
 
-sub sortArrayByMthd {
-	my $arrayHandle=$_[0];
-	my $sortMethod=$_[1];
+sub sortArrayByMthd { ##sortArrayByMthd( \@array, sortMethod, $sortField )
+	my $arrayHandle = $_[0];
+	my $sortMethod = $_[1];
+	my $sortField = $_[2];
 #	debugger(DBG_MDARRAY,scalar @{$arrayHandle},scalar @{$arrayHandle->[0]},@{$arrayHandle});
-	@{$arrayHandle} = sort { &$sortMethod() } @{$arrayHandle};
+	if (defined $sortField) {
+		@{$arrayHandle} = sort { &$sortMethod($sortField) } @{$arrayHandle};
+	}
+	else {
+		@{$arrayHandle} = sort { &$sortMethod() } @{$arrayHandle};
+	}
 #	debugger(DBG_MDARRAY,scalar @{$arrayHandle},scalar @{$arrayHandle->[0]},@{$arrayHandle});
 }
 
-sub ascBySSN {
-	$a->[IDX_SS_NUM] cmp $b->[IDX_SS_NUM];
+sub ascAlphaByField { ##ascAlphaByField( $field )
+	my $field = $_[0];
+	$a->[$field] cmp $b->[$field];
 }
 
 #Actual meat of the program.
@@ -216,7 +234,7 @@ sub main {
 	modRecurseCounter();
 	setContinueInt();
 	populateDataArrays(); 
-	sortArrayByMthd(\@patientData,\&ascBySSN);
+	sortArrayByMthd(\@patientData,\&ascBySSN,IDX_SS_NUM);
 	do {
 		menu();
 		setContinueInt(USE_PROMPT);
@@ -232,7 +250,7 @@ sub populateDataArrays {
 #	debugger(DBG_MDARRAY,scalar @departmentCodes,scalar @{$departmentCodes[0]},@departmentCodes);
 }
 
-sub retrieveRecords {
+sub retrieveRecords { ##retrieveRecords( filename.csv, \@array )
 #	debugger(DBG_ARGS,@_);
 	my $IN_FILE=$_[0];
 	my $arrayHandle=$_[1];
@@ -252,13 +270,7 @@ sub retrieveRecords {
 
 sub menu {
 	my $menuPromptRoot = "Search for patient records by Social Security Number (" .  MENU_ONE . "), or exit (" . MENU_EXIT . ")\n? ";
-	print $menuPromptRoot;
-	my $menuSelection = getNumInput(MENU_EXIT,MENU_ONE,$menuPromptRoot); 
-	if ($menuSelection eq MENU_ONE) {
-		menuSelectionSSN();
-	}
-	elsif ($menuSelection eq MENU_EXIT) {
-		die "Exiting program.\n";
+	print $menuPromptRoot; my $menuSelection = getNumInput(MENU_EXIT,MENU_ONE,$menuPromptRoot); if ($menuSelection eq MENU_ONE) { menuSelectionSSN(); } elsif ($menuSelection eq MENU_EXIT) { die "Exiting program.\n";
 	}
 }
 
@@ -274,11 +286,15 @@ sub menuSelectionSSN {
 	my @matchedRecords = ();
 	unless ($queryReturn eq $querySSN) {
 		@matchedRecords = @{$queryReturn};
+		foreach my $item (@matchedRecords) {
+		}
 #		debugger(DBG_MDARRAY,scalar @matchedRecords, scalar @{$matchedRecords[0]},@matchedRecords);
 	}
 	else {
 		print "\nNo matches found.\n";
 	}
+	#formatMatchedRecords();
+	#printFormattedMatchedRecords();
 }
 
 sub getSocialSecNum {
@@ -315,17 +331,17 @@ sub getSocialSecNum {
 	return $cleanInput; 
 }
 
-sub queryPatientDataSSN {
+sub queryPatientDataSSN { ##queryPatientDataSSN( $querySSN )
 #	debugger(DBG_ARGS,@_);
 	my $querySSN = $_[0];
 	my @matchedRecords = ();
-	foreach my $item (@patientData) {
-#		debugger(DBG_ARRAY,scalar @{$item},@{$item});
-#		debugger(DBG_VARS,$item->[IDX_SS_NUM]);
-#		debugger(DBG_VARS,($item->[IDX_SS_NUM] =~ s/-//gr));
+	foreach my $patientRecord (@patientData) {
+#		debugger(DBG_ARRAY,scalar @{$patientRecord},@{$patientRecord});
+#		debugger(DBG_VARS,$patientRecord->[IDX_SS_NUM]);
+#		debugger(DBG_VARS,($patientRecord->[IDX_SS_NUM] =~ s/-//gr));
 #		debugger(DBG_VARS,($querySSN =~ s/-//gr));
-		if (($item->[IDX_SS_NUM] =~ s/-//gr) =~ ($querySSN =~ s/-//gr)) {
-			push(@matchedRecords,$item);
+		if (($patientRecord->[IDX_SS_NUM] =~ s/-//gr) =~ ($querySSN =~ s/-//gr)) {
+			push(@matchedRecords,$patientRecord);
 		}
 	}
 	if ((scalar @matchedRecords) eq 0) {
@@ -335,6 +351,53 @@ sub queryPatientDataSSN {
 #		debugger(DBG_MDARRAY,scalar @matchedRecords, scalar @{$matchedRecords[0]},@matchedRecords);
 	}
 	return(\@matchedRecords);
+}
+
+sub formatMatchedRecords { ##formatPatientRecords( @matchedRecords )
+	my @matchedRecords = $_[0];
+	debugger(DBG_ARGS,@_);
+	foreach my $record (@matchedRecords) {
+		my $primeDept = $record->[IDX_PRIME_DEPT];
+		$record->[IDX_PRIME_DEPT] = returnDeptCodes($primeDept);
+	}
+	my $uniqueSSN = buildUniqueSSNs(@matchedRecords);
+	my $uniqueDept;
+}
+
+sub returnDeptCodes { ##returnDeptCodes( $deptCode )
+	my $deptCode = $_[0];
+	foreach my $codePair (@departmentCodes) { 
+		if ($codePair[0] eq $deptCode) {
+			$deptCode = $codePair[1];
+			break;
+		}
+	}
+	return $deptCode;
+}
+
+sub buildUniqueSSNs { ##buildUniqueSSNs( @modifiedMatchedRecords )
+	my @matchedRecords = $_[0];
+	my @uniqueSSNs = ();
+	foreach my $record (@matchedRecords) {
+		my $isUniqueSSN = 0;
+		if (@uniqueSSNs) {
+			foreach my $SSN (@uniqueSSNs) {
+				unless ($record->[IDX_SS_NUM] eq $SSN) {
+					$isUniqueSSN = TRUE;
+				}
+			}
+		}
+		if ($isUniqueSSN ne TRUE) {
+			next;
+		}
+		else {
+			push(@uniqueSSNs,$record->[IDX_SS_NUM]);
+		} 
+	}
+	return(\@uniqueSSNs);
+}
+
+sub printFormattedMatchedRecords { ##printFormattedMatchedRecords( @formattedPatientRecords )
 }
 
 main();
