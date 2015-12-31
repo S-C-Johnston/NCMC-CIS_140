@@ -3,7 +3,7 @@
 ##Author: Stewart Johnston (Johnstons1@student.ncmich.edu)
 ##Assignment: Final Exam
 ##Purpose: Demonstrate mastery of perl as covered in class
-##Version: 0.8
+##Version: 0.9
 
 use 5.14.2;
 use warnings;
@@ -368,7 +368,7 @@ sub formatMatchingRecords { ##formatPatientRecords( @matchingRecords )
 	my @uniqueSSNs = buildUniqueSSNs(@matchingRecords);
 	foreach my $SSN (@uniqueSSNs) {
 		$sortSSNsByDept($SSN,@matchingRecords);
-		
+		@matchingRecords = formatDeptOwedTotals($SSN,@matchingRecords);
 	}
 }
 
@@ -426,7 +426,7 @@ sub sortSSNsByDept { ##formatDeptOwedTotals( $SSN, @matchingRecords )
 	splice(@matchingRecords, $sortSliceOffset, $sortSliceLength, sortArrayByMthd(@matchingRecords[$sortSliceOffset,$sortSliceLength],&ascAlphaByField,IDX_PRIME_DEPT));
 }
 
-
+#Warning, here be dragons. Ugly as sin.
 sub formatDeptOwedTotals { ##formatDeptOwedTotals( $SSN, @matchingRecords )
 	my $SSN = $_[0];
 	my @matchingRecords = $_[1];
@@ -437,25 +437,46 @@ sub formatDeptOwedTotals { ##formatDeptOwedTotals( $SSN, @matchingRecords )
 	my $owedTotal = 0;
 	while (my ($i,$record) = each @matchingRecords) {
 		if ($record->[IDX_SS_NUM] eq $SSN) { 
-			if (! defined $spliceOffset && defined $matchedRecord) {
+			if (! defined $spliceOffset && defined $firstMatchedRecord) {
 				$spliceOffset = $i;
 			}
 			if (defined $spliceOffset) {
 				$spliceLength += 1;
 			}
-			if (! defined $department) {
+
+			if (! defined $department) { #first run
 				$department = $record->[IDX_PRIME_DEPT];
+			}
+			elsif ($department eq $record->[IDX_PRIME_DEPT] && $department eq $matchingRecords[$firstMatchedRecord][IDX_PRIME_DEPT]) { #multiple runs, check if still same as first
+				$owedTotal += $record->[IDX_OWED_AMOUNT];
 			}
 			elsif ($department ne $record->[IDX_PRIME_DEPT]) {
 				$department = $record->[IDX_PRIME_DEPT];
+				$owedTotal = 0;
+				$owedTotal += $record->[IDX_OWED_AMOUNT];
 			}
+
+
+			if ((! defined $matchingRecords[($i + 1)]) || ($department ne $matchingRecords[($i + 1)][IDX_PRIME_DEPT])) {
+				if ($department eq $matchingRecords[$firstMatchedRecord][IDX_PRIME_DEPT]) {
+					$matchingRecords[$firstMatchingRecord][IDX_OWED_AMOUNT] += $owedTotal;
+				}
+				else {
+					my @additionalDeptPair = [$department,$owedTotal];
+					my $plusOneIndex = ($#matchingRecords[$firstMatchedRecord] + 1);
+					$matchingRecords[$firstMatchedRecord][$plusOneIndex] = @additionalDeptPair;
+				}
+			}
+
 			if (! defined $firstMatchedRecord) {
 				$firstMatchedRecord = $i;
 			}
 		}
-		if (! defined $spliceOffset) {
-		}
 	}
+	if (defined $spliceOffset) {
+		splice(@matchingRecords,$spliceOffset,$spliceLength);
+	}
+	return(\@matchingRecords);
 }
 
 sub printFormattedMatchingRecords { ##printFormattedMatchingRecords( @formattedPatientRecords )
