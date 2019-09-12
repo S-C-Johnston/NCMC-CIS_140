@@ -1,0 +1,16 @@
+#!/bin/env bash
+
+##Title: Project 2 -- Command Line
+##Purpose: Demonstrate basic script ability
+##Author: Stewart Johnston
+##Email: johnston1@student.ncmich.edu
+
+##Note to the user: Must be run with the correct permissions, otherwise
+##the OS will be upset about chown and chmod
+
+mkdir -p sandbox/css sandbox/images sandbox/scripts;
+touch sandbox/index.html;
+cp /var/www/images/logo{1,2}.png sandbox/images;
+chown -R root sandbox/*; chmod -R 744 sandbox/*;
+ls -R sandbox/* > sandbox/web-listing;
+ls /var/www/images/*.png > sandbox/avail-images;
