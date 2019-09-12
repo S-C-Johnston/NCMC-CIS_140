@@ -1,0 +1,18 @@
+**Algorithms**
+-	Sorting
+	+	Bubble sort
+		1	
+	+	Insertion sort
+		sub sortArrayInsertion {
+			my $size = @arrayNumbers;
+			my $temp = 0;
+			for (my $i = 1; $i < $size; $i++) {
+				my $j = $i;
+				while ($j > 0 && $arrayNumbers[$j] < $arrayNumbers[$j - 1]) {
+					$temp = $arrayNumbers[$j];
+					$arrayNumbers[$j] = $arrayNumbers[$j - 1];
+					$arrayNumbers[$j - 1] = $temp;
+					$j--;
+				}
+			}
+		}

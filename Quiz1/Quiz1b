@@ -1,0 +1,6 @@
+#!/bin/sh/
+mkdir -p test/red/magenta test/blue/cyan
+for dir in test/*/*/; do echo 'echo "This file is in folder $(ls .)"' > $dir/$(ls .).bsh; done
+find test/ -type f -name *.bsh -exec chmod +x ;
+find test/ -type f -name *.bsh -exec cat >> test/scripts ;
+for dir in test/*/*/; do  mkdir $dir/next/ ; done

@@ -1,0 +1,73 @@
+**Switches**
+-	Ports on front, w/ Network Module, which accepts fiber/etc. connections.
+
+**Networks**
+-	LAN: Local Area Network
+	+	@ OSI Layer 1
+-	VLAN: Virtual Local Area Network
+-	WAN: Wide Area Network
+	+	@ OSI Layer 2
+	+ 	Connects disparate LANs with routers.
+
+**Shells**
+-	Bash:	Bourne Again SHell
+	Named for Steven Bourne who originally programmed the shell.
+	+	.bash_profile and .bashrc change one's bash environment.
+	+	.bash_history stores list of commands that were run most recently
+	+	.bash_logout runs commands on user logout
+-	Ksh:	Korn SHell
+-	Csh:	C SHell
+	Based on C syntax
+-	Zsh
+	Advanced shell with lots o' features.
+
+-	PATH
+	Unix systems will look for commands to run in the PATH environment variable set in the bash_profile
+
+-	rc files and shell scripts
+	+	.sh filename extension distinguishes a shell script.
+	+	Any time a filename ends with "rc", it stands for "run commands", which is a script that happens at startup or login for bashrc, vimrc, zshrc, etc
+	+	Shell scripts are procedural
+
+-	``export`` sends ENVVars to other sessions that the user creates
+-	``umask`` sets default file permissions for that user
+-	``set`` sets an environment variable
+
+**Job Control**
+-	Can start a command in the background by terminating the line with an ampersand ``&``
+-	Can see the jobs running with builtin ``jobs`` at the prompt
+-	Can suspend or kill jobs with ``kill``
+-	Can see background jobs with ``fg %jobNum``
+-	``CTRL+Z`` is the meta-character suspends the foreground task pending signal
+-	Send suspended job to background with ``bg %jobNum``
+-	Scheduling
+	+	``at timeFormat`` opens an at prompt for a job to run at that time.
+		*	Not as userfriendly.
+		*	Can be viewed with ``jobs``
+	+	``crontab -e`` opens up the cronjob table for editing.
+		*	Timing syntax is a series of comma-deliniated-lists space delimited for different time classes.
+			minutes hours dayMonth month dayWeek $commandsHere
+
+**Commands**
+-	grep:	Global/ Regular Expression/ Print
+	+	Searches for patterns and prints the lines.
+-	rm:	Remove
+-	sed:	Stream EDitor
+	+	Can be used to change text en masse.
+		Mary Jane to Mary Smith w/ ``s/Mary Jane/Mary Smith``
+
+**RegEx: Regular Expression**
+Tool for finding text in streams.
+-	Start with two forward slashes, ``//``
+-	``s/foo/bar/`` Search and replaces instances of "foo" with "bar"
+
+**Disaster Recovery**
+History: Server with HDDs, OS installed on that server. Suggested with 2 partitions: system and data.
+Current: Storage Area Network partitioned as needed. Sections for servers, section for Networked File System share.
+
+By carving the partitions up and presenting them to the VMs and backup software the right way, can be set up for "Brick Level" restores. LUNs are virtual hard drives to which one can point an application for storage.
+
+-	Priority:
+	1	Data
+	2	VMs
+	3	Applications

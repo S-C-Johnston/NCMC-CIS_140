@@ -1,0 +1,8 @@
+mkdir -p test/red/magenta/ test/blue/cyan
+echo 'echo This file is in folder $(ls .)' > test/red/red.bsh
+echo 'echo This file is in folder $(ls .)' > test/blue/blue.bsh
+echo 'echo This file is in folder $(ls .)' > test/red/magenta/magenta.bsh
+echo 'echo This file is in folder $(ls .)' > test/blue/cyan/cyan.bsh
+find test/ -type f -name *.bsh -exec chmod +x {} \;
+find test/ -type f -name *.bsh -exec cat {} >> test/scripts \;
+find test/ -mindepth 1 \! -name next -type d -exec mkdir {}/next \;

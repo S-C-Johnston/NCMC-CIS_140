@@ -1,0 +1,147 @@
+Unicode keys in Windows:
+	Holt ALT key and type in numbers corrosponding to character.
+	Meta+r charmap will open a character map GUI.
+
+**Hardware**
+-	Motherboard
+	+	North Bridge
+		*	Relays information between CPU and main systems/memory.
+	+	South Bridge
+		*	Controls peripheral devices.
+-	Transistors
+-	CPU: Central Processing Unit
+	+	CU: Control Unit
+	+	ALU: Arithmetic Logic Unit
+	+	Cache
+		*	Data Processing Cycle
+			When the CPU caches run out of space, they push storage to memory. When memory runs out, some information is stored on the hard drive temporarily in SWAP.
+-	RAM: Random Access Memory
+	+	Volatile Flash Memory
+		*	When it loses power, it loses all stored information.
+-	Hard Drive
+	+	HDD: Hard Disk Drive
+		*	Latency measured in Milliseconds
+	+	SSH: Solid State Drive
+		*	Non-volatile flash storage
+-	PSU: Power Supply Unit
+	+	Continuous vs burst wattage
+		Continuous wattage for long term sustainable performance, vs burst wattage for POST and boot.
+	(Best manufacturers are PC Power & Cooling, and Antec)
+
+**AAA**
+-	Authenticate
+	+	Identifying a user.
+	+	Username, password.
+-	Access
+	+	What a user can do.
+-	Auditing
+	+	What and how you audit.
+	+	Who did what, where, how.
+
+**Operating Systems**
+-	Kernel
+	+	Talks directly to the hardware in kernel space, to make it accessible to the rest of the environment, shell, users, etc.
+	+	Handles hardware and data processing cycle natively.
+	+	Device drivers extend capability of kernel to talk to specialized hardware.
+-	Linux
+	+	Free and Open Source
+	+	Better if known from the shell.
+	+	Not necessarily the best for non-technically inclined folk.
+	+	Multi-tasking, multi-threaded, multi-user (timesharing) OS.
+	+	Once upon a time, used with terminals logging into the system on the network. No longer common-use. Typically users will have their own machines.
+-	UNIX
+-	Virtual Machines
+	+	VMWare
+	+	SAN: Storage Area Network
+		*	Network Switches made redundant with multiple control units.
+		*	If one goes down, the other picks up the load.
+		*	Redunant switches connected to chassis loaded with storage.
+	+	Server Array
+	+	Redundancy
+	+	HyperVisor
+		*	Networked locally and interfaced with from some connection over a browser.
+
+**Remote Access**
+-	Ports
+	+	80:	Web
+	+	434:	Secure Web
+-	TelNet
+	+	Plaintext connection.
+-	SSH
+	+	Encrypted connection.
+		*	PGP
+		*	GPG
+		*	Deffy-Helman?
+			No longer supported. As of Chrome 45, no longer supported by that browser.
+
+**Command syntax**
+1	Command
+	-	Non-optional
+	-	Only non-optional part of a command.
+2	-options
+	-	Indicated by flags (-)
+	-	Mutate the command do perform different variations of the operation.
+3	arguments
+	-	Pathnames to file, for example.
+
+**Commands**
+-	Navigation/information
+	+	ls	List	Lists
+		*	files in directory specified (cwd if no arguments)
+		*	-a	All files
+		*	-l	Long form
+	+	pwd	Print Working Directory
+	+	cd	Change Directory
+-	File handling
+	+	touch	Creates an empty file with name of argument, or updates modification timestamp.
+	+	chmod	Change mode/permissions
+		*	Can be set in octal mode
+			(4) read
+			(2) write
+			(1) execute
+			(0) none
+			Numbers are added for permissions on file. 4+2 is read/write. 7 is rwx
+	+	chown	Change owner of file.
+	+	chgrp	Change group for file.
+-	User info
+	+	w	Show who is logged in and what they're doing.
+	+	who	Show who is logged in.
+	+	finger	Show user info?
+	+	last	Show the login log, last listed most recently.
+
+**Compound commands / redirection**
+-	|	Pipe shell builtin (meta-character)
+	+	Redirects output from command to the left as input to command to the right.
+	+	command:stdout | command:stdin
+-	>	Write to file.
+	+	Will overwrite any information in a file for the new input.
+-	>>	Append to file.
+	+	Will add any input to the end of the file.
+-	;	endline
+	+	When used to separate commands, multiple commands can be written on one line, in order of writing(?).
+
+**Wildcards**
+Standins for explicit characters to return results based on wildcard type.
+-	?	One character
+-	*	Any number of characters
+
+**File structure**
+-	Partitions
+	+	Most modern filesystems can handle up to 4 such partitions.
+	+	Partitions are arbitrary logical organization of data. Operations on one partition do not affect data on another unless explicitly stated.
+-	Pathnames
+	+	Absolute pathnames start with the root directory "/"
+	+	Relative pathnames can have no prefix (for a directory in the current working directory), or "./" (current directory) or "../" (directory one level above current)
+-	Directories
+	+	An analogue to folders, in the file cabinet metaphor.
+	+	Can contain directories or files.
+	+	Everything is a file, directories are just a special kind of file that point to information.
+-	Root directory
+	+	Top-most directory on a partition. All other storage of a partition eventually goes back to root.
+	+	/
+-	"Root" directory
+	+	Home directory of the root user.
+	+	/root/
+-	etc
+	+	Contains directories and files for the configuration and operation of the OS.
+	+	/etc/drivers/someDrivers

@@ -1,0 +1,120 @@
+**Variables**
+-	Scalar variables
+	+	Hold only one value at a time. Anything new overwrites the old
+-	Arrays
+	+	Hold a number of values at a time.
+	+	Individual values called with their index. Usually indexed from 0.
+	+	Pseudocode
+		``for(i=0; i < arrayLength; i++){
+			letters[i] = <STDIN>;
+		  }``
+	+	Perl implementation
+		``@array`` Perl uses @ sigil to denote an array.
+		``$scalar = @array`` assigns scalar the value of the length of array.
+		
+-	Multi-dimensional arrays
+	+	First kind is a two dimensional array.
+		*	Syntactical sugar for a really long array.
+	+	Values called with their index, but uses one value for each axis.
+		*	This is syntactical sugar in many languages. C allows one to call a value with the product of all coordinates, since it really is just a really long single-dimensional array. 
+	+	Typically use [row][col]
+	+	Usually iterated through with nested for loops.
+		*	Typically done with short local vars i and j.
+			``for(i=0; i < rows; i++){
+				for(j=o; j < cols; j++){
+					do things
+				}
+			  }``
+
+**(cute) Databases**
+-	CSV:	Comma Separated Values
+	+	Columns of the csv are delineated by commas.
+	+	Rows of the csv are delineated by newlines.
+
+(Howard babbles about CSVs and City/State and how everybody should stop asking for them, and just ask for zip code.)
+
+**New languages**
+-	One should examine the following aspects of a programming language.
+	+	Data Handling (vars, arrays, parameters)
+	+	Methods	
+	+	File I/O
+
+**Bash**
+It's all weird-ass bullshit. What even is Bash scripting?
+
+-	Comment header block
+	+	First line of every script should be the shebang.
+		Tells the shell which interpreter and language to use.
+		Bash shell defaults to itself.
+		*	#!/bin/bash for bash scripts
+	+	##Assignment:
+	+	##Author:
+	+	##Version:
+	+	##Purpose:
+	+	Pragmas
+-	Declarations
+	+	Declare global variables.
+	+	Declare and initialize global constants.
+	+	``declare`` -typeFlags name
+		Declaring without a type flag declares a string.
+		*	-a Array (single-dimensional)
+		*	-A Associative Array (multi-dimensional)
+		*	-i int
+		*	-r readonly -- makes the value immutable.
+		*	``-ai`` array of ints
+-	Dispatch
+-	Methods
+	+	Methods should all start with verb names
+		setFoo getBar etc.
+	+	## comments
+		*	Useful for the source on some programming justification.
+-	Syntax
+	+	Individual variables in arrays accessed by wrapping the array and its index in {} curly braces.
+		``${array[$index]}``
+	+	Expressions wrapped in [__] square brackets, with a space of padding either side. 
+		``[ expression ]``
+	+	Math operations wrapped in ((__)) double parens, with a space of padding either side.
+		``(( counter++ ))``
+	+	Associative arrays values are called with comma delineated values for coordinates.
+		``${names[$i,$j]}``
+	+	If condition logical flags/operators
+		*	-n
+			Check if a variable is defined 
+		*	-z
+			Check if a variable is not defined
+		*	-gt Greater than
+		*	-lt Less than
+		*	-ge Greater than or equal to
+		*	-le Less than or equal to
+	+	Read builtin
+	+	Boolean logic
+		*	|| Logical OR, placed infix two expressions. True if either expression is true.
+		*	&& Logical AND, placed infix two expressions. True only if both expressions are true.
+	+	BUILTINS
+		More information can be found with ``help builtin``
+		*	read
+			*	-p prompt Presents a prompt for the user to provide interactive input.
+		*	echo
+		*	sleep
+		*	clear
+		*	etc
+	+	Directly referring to a variable: reference with $ sigil
+		``"$fooBar"``
+	+	Methods in Bash defined with following () parens for parameters and the block it names {}.
+		Blocks of code have an opening and a closing {} curly brace.
+		Methods are called with their name. Passing parameters to a method is the same, just follow it with the space-delineated params.
+	+	If statements	
+		if [ expression ] 		## if statement start, expression is true
+		then				## do the following things
+			(( foo++ ))		## incrementor
+		else				## if expression isn't true, do this thing
+			foo=bar			## simple assignment
+		fi				## end of the if statement
+	+	While statement
+		while [ expression ] 		## while statement start, expression eval
+		do				## do the following things
+			do things		## commands, other control structures
+		done				## done with the while statement
+
+**Perl**
+

@@ -1,0 +1,28 @@
+**General/Architectural Requirements**
+-	Internal room at least 14' x 14' 
+	+	Preferably between ground and top-most floor, if in building w/ >=3 floors.
+	+	If < 3 floors, ground floor.
+	+	NO BASEMENTS (anything below the water level)
+-	No external windows
+-	Avoid load-bearing walls for possibility of expansion, if necessary.
+	+	Avoid fixed walls if possible, but they need to be able to made fire-resistant.
+		*	3/4" thick plywood double coated with fire-retardant paint on at least one wall. Other fire code specced elsewhere.
+	+	Backboard in standard plywood sheet size (4' x 8') mounted vertically 6" above finished floor.
+	+	Also, static immovables like elevators should be avoided
+-	Floor load-bearing should be capable of supporting large equipment. Structural engineer consulted.
+-	Room with double doors at least, for moving large equipment.
+	+	Technical:
+		single doors 36"W x 80"H
+		double doors 72"W x 90"H
+		No threshhold
+		Hinged outwards if possible
+-	No ceiling panels, ceiling height at least 8' w/o obstructions, should be at least 10' to accommodate taller equipment and overhead paths.
+-	Adequate lighting for working conditions, possibly fluorescent tubes.
+-	No water or drain pipes of any kind if not directly required to support equipment.
+-	Climate control installed in room, redundantly.
+-	UPS systems < 100 kVA for use by telecom equipment in same room. > 100 kVA in separate room.
+
+**Racks**
+-	> 3' clearance in front of racks and cabinets, 4' preferred.
+-	Max rack height no more than 8', preferable 7' for easier manipulation.
+-	Any cabinets should be adequate depth for all hardware, including cable management. 6" margin on largest equipment preferred.

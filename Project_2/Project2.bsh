@@ -1,0 +1,6 @@
+mkdir -p sandbox/{css,images,scripts} #Makes directories and any parents needed, in this case using bash expansion with a comma delimited list in the curly braces
+touch index.html #Creates a new blank file, like I did for the file I'm currently editing
+cp /var/www/images/logo{1,2}.png sandbox/images/ #Copies files from the first argument to the second, again using bash expansion for 1 and 2
+chmod -R 744 sandbox/ #Changes the permissions mode, recursively, for all the files and directories under sandbox, to RWXR--R--
+ls -R sandbox > sandbox/web-listing #Lists recursively all the non-hidden files and uses redirection to create and write a file with that output
+ls /var/www/images/*.png > sandbox/avail-images #Lists only the files in the directory that match the *.png pattern, and writes that output to a file

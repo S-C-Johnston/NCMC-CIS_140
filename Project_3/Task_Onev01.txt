@@ -1,0 +1,522 @@
+Stewart Johnston
+NCMC CIS 140
+Project 3, Task One
+
+Visual Editor
+=============
+***
+Vi is the Visual Editor. It is the effective culmination of several generations
+of text editor in the Unix ecosystem. From Ed, the original Unix Line Editor,
+was spawned Ex, a line editor with more user-friendly and EXtended set of
+commands. The line editors manipulated a file one line at a time, and didn't
+show more than one line unless explicitly told to print a range of lines. Ex
+was eventually given a Visual mode, invoked with the command ``visual``. The vi
+editor invoked from the command line is a shortcut to ex's visual mode. Vi will
+show all text it possibly can in the buffer.
+
+In short:
+vi can be invoked in multiple ways.
+-	From the command line:
+	+	``vi``
+	+	``ex -v``
+-	From within ex
+	+	``vi``
+	+	``visual``
+
+
+Modes
+-----
+***
+Vi is a modal editor. This means that it operates differently based on which
+mode it is in. Normal mode is the default mode for the editor. It is from
+normal mode that most editing commands are executed. It can be reached from any
+other mode by tapping the ``ESC`` key. Insert mode will capture any keys typed
+and put them to the current editing buffer. Insert mode is normally reached
+with the keystrokes ``i`` or ``a``, which allow one to insert at the cursor or
+append after the cursor, respectively.  Command mode can only be reached from
+normal mode, by typing ``:``. Command mode accepts various file, buffer, and
+text manipulating commands.
+
+In short:
+From within vi, the modes are as follows:
+-	Normal mode
+	The default mode
+	+	Reached from other modes with the ``ESC`` key
+	+	Used for most editing and navigation commands.
+-	Insert mode
+	Mode in which everything typed is put to the buffer.
+	+	Can be reached in several ways from normal mode
+		*	``i`` to insert at the cursor's location.
+		*	``a`` to append immediately after the cursor's location.
+-	Command mode
+	Moves the cursor to the bottom of the editing screen for typing
+commands. 
+	+	Reached from normal mode
+		*	``:`` keystroke.
+
+
+The Buffer, Saving, and Quitting
+---------------------------------
+***
+The buffer reflects the current state of the file being edited. Changes in the
+buffer are not automatically saved, or written, to the file on disk. Writing to
+the file on disk must be done manually. In normal mode, shift-ZZ can write and
+quit immediately. Otherwise, one must use command mode and the ``w`` "write"
+and ``q`` "quit" commands. ``:wq`` will write the file to disk and quit vi. The
+editor will try to warn a user about unsaved changes, or if the user is trying
+to write to a readonly file. One may quit a file without saving changes by
+forcing it with ``q!`` or may write to a file opened as readonly with ``w!``.
+Writing a file to disk requires that the current file has a name. If vi was
+invoked in some way with a filename, such as ``vi someFile.txt``, that is the
+name under which the file will be saved. New files can be opened in different
+directories this way, with pathname expansion. If vi was invoked without a
+filename as an argument, one must pass a filename argument to the write
+command. For example: ``w someFile.txt``. One may save a new copy of the file
+under a different name this way as well, and the filename under which it is
+being edited will change.
+
+In short:
+-	The buffer reflects the current state of the file.
+-	Changes shown in the buffer must be written to the file manually.
+	+	To save a file, it must have a filename.
+		*	A file can be edited with a filename already present by
+		*	invoking vi with a filename argument. For example:``vi
+		*	someFilename``
+-	Writing and quitting can be done in several ways
+	+	From normal mode
+		*	``shift-ZZ``	Write and Quit the file immediately.
+			Will throw an error if the file has no name.
+	+	From command mode
+		*	``w``	Write the file to disk.
+			Will throw an error if the file has no name.
+			Will throw a warning if the file is open in readonly mode.
+		*	``w!``	Force Write the file to disk; bypasses readonly restriction.
+			Will only bypass restrictions if the user has
+permission from the system to do so, such as if the user is the owner of the
+file.
+		*	``w someFilename``	Writes the file to disk as
+		*	"someFilename". Changes the name under which the file
+		*	is being edited. 
+			Required if the editor was invoked without a filename.
+		*	``q``	Quit the editor.
+			Will throw a warning if changes to the file have not been saved.
+		*	``q!``	Quit the editor without writing changes.
+		*	``wq``	Write the file to disk and Quit the editor.
+
+
+Moving Around
+-------------
+***
+Movement of the cursor is done from normal mode, with motion keystrokes. Motion
+keystrokes come in several different classifications. 
+
+**A Note About Lines**
+Lines in vi are not limited by length except what the computer's memory can
+handle. It is easy to accidentally write a very long line that will wrap around
+to the beginning of the next line. This may visually appear to be two separate
+lines, but is in fact one long line, just wrapped. When vi operates on lines,
+it operates on the logical lines, as separated by newlines, or
+carriage-returns. It is important to remember to terminate a line with a
+newline or carriage-return to prevent confusing behavior. Otherwise, it may be
+wise to investigate formatting tools which insert newlines at certain line
+lengths.
+
+**Line Motion**
+These motion keystrokes work only on the current line, and do not accept
+magnitude or count arguments. ``0`` (zero) moves the cursor to the absolute
+beginning of the current line. ``^`` moves the cursor to the first non-blank
+character of the current line. ``$`` moves the cursor to the absolute end of
+the current line.
+
+In short:
+-	``0`` (zero)
+	Move the cursor to the absolute beginning of current line.
+-	``^``
+	Move the cursor to the first non-blank character of the current line.
+-	``$``
+	Move the cursor to the absolute end of the current line.
+
+**Motion Count**
+All motion verbs hereafter can be given a count to repeat. To give a motion
+keystroke a count, type the number of the count immediately prior to the
+keystroke. ``3h`` will move the cursor one character to the left 3 times.
+
+**Character Motion**
+Moving the cursor by one character or line at a time is done with ``h``, ``j``,
+``k``, and ``l``. This is the classic "vi way"; these keystrokes move left,
+down, up, and right, respectively. If vi is configured correctly, one may also
+use the corrosponding arrow keys to move in the same way, which is unique in
+that it can be done in insert mode as well. 
+
+In short:
+-	``h`` or left-arrow
+	Move the cursor left for count characters.
+-	``j`` or down-arrow
+	Move the cursor down for count lines.
+-	``k`` or up-arrow
+	Move the cursor up for count lines.
+-	``l`` or right-arrow
+	Move the cursor right for count characters.
+
+**Word Motion**
+Word motions move the cursor in relation to words. By default, a word is
+defined as a sequence of alphanumeric characters and underscores, delimited by
+puncuation and whitespace. Vi also understands words defined as a sequence of
+non-blank characters, delimited by whitespace, like spaces, tabs, end-of-lines,
+etc. The guideline for moving by words delimited by punctuation or words
+delimited by whitespace (hereafter referred to as WORDS) is to use lowercase
+and uppercase motion keystrokes, respectively. ``w`` and ``W`` move the cursor
+to the beginning of the next word or WORD, respectively. ``b`` ``B`` move the
+cursor to the beginning of the current word or WORD, or if already at the
+beginning of the current word, to the beginning of the prior word or WORD.
+``e`` and ``E`` move the cursor to the end of the current word or WORD, or if
+already at the end of the current word, to the end of the next word or WORD.
+``ge`` and ``gE`` move the cursor to the end of the prior word or WORD,
+respectively.
+
+In short:
+-	words are defined as sequences of alphanumeric characters and
+	underscores, delimited by any character not an alphanumeric character
+or underscore.
+-	WORDs are defined as sequences of non-blank characters, delimited by
+	any blank character.
+-	``w``
+	Moves the cursor to the beginning of the next word.
+-	``W``
+	Moves the cursor to the beginning of the next WORD.
+-	``b``
+	Moves the cursor to the beginning of the current or prior word.
+-	``B``
+	Moves the cursor to the beginning of the current or prior WORD.
+-	``e``
+	Moves the cursor to the end of the current or next word.
+-	``E``
+	Moves the cursor to the end of the current or next WORD.
+-	``ge``
+	Moves the cursor to the end of the current or prior word.
+-	``gE``
+	Moves the cursor to the end of the current or prior WORD.
+
+**Object Motion**
+Object motions move the cursor in relation to objects as vi understands them.
+This includes, but is not limited to, sentences and paragraphs. A sentence is
+defined by default as ending at a '.', '!' or '?' followed by either the  end
+of a line, or by a space or tab.  Any number of closing ')', ']', '"' and '''
+characters may appear after the '.', '!' or '?' before the spaces, tabs or end
+of line.  A paragraph and section boundary is also a sentence boundary. A
+paragraph is defined by default as delimited by blank lines. ``(`` and ``)``
+move the cursor backward and foward, respectively, to sentence beginnings.
+``{`` and ``}`` move the cursor backward and foward, respectively, to paragraph
+limits. 
+
+In short:
+-	sentences end at english sentence punctuation ('.','!','?'), followed
+	by either the end of a line, or a space or tab.
+-	paragraphs are delimited by blank lines.
+-	``(``
+	Moves the cursor to the beginning of the current sentence.
+-	``)``
+	Moves the cursor to the beginning of the next sentence.
+-	``{``
+	Moves the cursor to the initial delimiter of the current paragraph.
+-	``}``
+	Moves the cursor to the ending delimiter of the current paragraph.
+
+**Absolute Line Motion**
+One may desire to move to any line at will. To do this, one enters normal mode
+and types a line number, followed by ``G``, for Go. This will move the cursor
+to the beginning of the appropriate line. Typing ``G`` on its own will move the
+cursor to the last line in the file. One may also move to any line at will from
+command mode with just the line number.
+
+In short:
+-	One can move to lines at will.
+-	From command mode
+	+	The line number and a confirmation will move the cursor
+directly to that line.
+-	From normal mode
+	+	``[lineNumber]G``	Move to the given line.
+	+	``1G``	Move to the first line in the file.
+	+	``G``	Move to the last line in the file.
+
+**Screen Motion**
+One can also move the cursor to the top, middle, and bottom of the screen. From
+normal mode, ``H``, ``M``, and ``L`` will move the cursor to the top, middle,
+and bottom of the screen respectively.
+
+In short:
+-	``H``
+	Move the cursor to the top of the screen.
+-	``M``
+	Move the cursor to the middle of the screen.
+-	``L``
+	Move the cursor to the bottom of the screen.
+
+**Special Motion**
+One special kind of motion especially useful to programmers is the motion from
+one brace to its matching brace. From normal mode, when the cursor is
+highlighting any "()", "{}", or "{}" brace, if a matching brace exists, one can
+jump to it with a ``%`` keystroke.
+
+In short:
+-	``%``
+	Move to the associated "()", "{}", or "[]" while the cursor is
+highlighting one such matched brace.
+
+
+**Searching For Text**
+----------------------
+***
+From normal mode, one can search for text. Searching is done by entering the
+respective direction keystroke (noting that the cursor will move to the bottom
+of the screen, as with command mode), typing the text to find verbatim (it is
+case sensitive by default), and tapping ``enter`` or ``return``. With the ``/``
+keystroke, the editor will search forward through the text from the cursor.
+``?`` will search backward through the text from the cursor. The cursor will
+move to the first found match if one is found; if no match is found, the cursor
+will not move. As with other motions, one can prepend the ``/`` and ``?``
+keystrokes with a count, and the cursor will move to the appropriate instance
+of the pattern, if it exists. ``n`` and ``N`` will move the cursor to the next
+found instance of the pattern searched, respectively. Search wrapping is on by
+default, and searching will move to the top or bottom of the file to continue
+the search for an instance of a pattern. One can also search forward and
+backward for the next instance of a single character, with ``f`` and ``F``.
+
+In short:
+-	Searching is done with the appropriate keystroke, entering the pattern,
+	and confirming the pattern with ``return`` or ``enter``.
+-	As with other motion keystrokes, counts can be used to find the
+	appropriate instance of the pattern.
+-	Search wrapping, which is on by default, will continue the search for
+	the next instance of the pattern at the top or bottom of the file, as
+appropriate to the direction.
+-	``/`` 	searches forward from the cursor's position.
+-	``?``	searches backward from the cursor's position.
+-	``n`` 	finds the next instance of the pattern in the direction of the
+	initial search.
+-	``N``	finds the previous instance of the pattern in (reverse)
+	direction of the initial search.
+-	``fc``	finds the next insance of the given character, in this case
+	"c".
+-	``Fc``	finds the previous instance of the given character, in this
+	case "c".
+
+
+**Advanced Text Manipulation**
+---------------------------
+***
+Insert mode can be entered in several ways, most of them from normal mode. The
+way in which one enters insert mode changes the way in which text is
+manipulated. The most prevalent methods are with ``i`` and ``a``, which are to
+insert and append, respectively; these insert at the cursor's location, and
+append immediately after the cursor's location. ``I`` enters insert mode
+immediately prior to the first non-blank character of a line. ``A`` enters
+insert mode immediately following the end of a line.``r`` will allow one to
+replace a single character under the cursor. ``R`` will allow one to overwrite
+a sequence of characters, similar to repeatedly replacing individual characters
+in-place. ``o`` will create a new line and insert below the cursor's line.
+``O`` will create a new line and insert above the cursor's line. 
+
+In short:
+-	``i``
+	Insert prior to cursor.
+-	``I``
+	Insert prior to first non-blank character on line.
+-	``a``
+	Append after cursor.
+-	``A``
+	Append after end of line.  
+-	``r``
+	Replace a single character in-place.
+-	``R``
+	Replace a sequence of characters in-place.
+-	``o``
+	Open a new line and insert below the cursor's line.
+-	``O``
+	Open a new line and insert above the cursor's line.
+
+**A Note About Deletion, Yanking, and Putting**
+Deletion, obviously, removes the appropriate text from the working buffer.
+Non-obviously, it is also functionally vi's version of cutting text. One may be
+surprised when they yank text and delete other text, expecting that they can
+put the yanked text. Yanking and deleting both yank text to a special buffer
+used by put operations. When one puts to the general working buffer in any way,
+it puts a copy of whatever is present in the yank buffer. Functionally, vi's
+delete, yank, and put operations are the equivalent of other editor's cut,
+copy, and paste operations.
+
+**Deletion and Yanking**
+The most common editing one may want to perform is deletion of characters. vi
+has very powerful capabilities for this. ``x`` will delete a single character
+under the cursor, or if prepended with a count, the character under the cursor
+and count characters to the right. Other operators, including but not limited
+to the ``d`` delete operator and the ``c`` change operator, can be influenced
+with motions. ``d`` will delete with whichever motion is passed to it, and
+``c`` will delete with whichever motion is passed to it, and then enter insert
+mode. ``dw`` will delete using a word motion; ``cw`` will delete using a word
+motion, and enter insert mode. They can be further manipulated with the ``i``
+keystroke. ``diw`` and ``ciw`` will delete or change the entirety of a word,
+and ``diW`` and ``ciW`` will do the same to WORDS, as referenced in the motion
+section. ``dd`` and ``cc`` are shortcuts for deleting or changing an entire
+line. Yanking, with ``y``, reacts the same way to motion arguments as deletion
+does, but copies instead of cutting text.
+
+In short:
+-	``x``
+	Delete the character under the cursor, or count numbers to the right of
+the cursor.
+-	Where noted as based on a motion, the following operations will be
+	performed starting from the cursor's position to where the following
+motion would normally move the cursor. ``d2w`` will thus delete two words.
+-	Where noted as based on a motion, the following operations can have
+	special "object" arguments appended.
+	+	``iw``		inner word		
+	+	``aw``		a word			
+	+	``iW``		inner WORD as described in the motion section.
+	+	``aW``		a WORD
+	+	``is``		inner sentence		
+	+	``as``		a sentence		
+	+	``ib``		inner '(' ')' block	
+	+	``ab``		a '(' ')' block		
+	+	``ip``		inner paragraph		
+	+	``ap``		a paragraph		
+	+	``iB``		inner '{' '}' block	
+	+	``aB``		a '{' '}' block		
+-	``d``
+	Delete based on a motion.
+-	``dd``
+	Delete a whole line.
+-	``c``
+	Change text based on a motion.
+-	``cc``
+	Change a whole line.
+-	``y``
+	Yank, or copy, text based on a motion.
+-       ``yy``
+	Yank, or copy, a whole line.
+
+**Putting**
+Any text present in the copy buffer can be put again with the put operations.
+``p`` puts the text immediately after the cursor, or if more than one line,
+following the line the cursor is on. ``P`` puts the text immediately before the
+cursor, or if more than one line, immediately before the line the cursor is on.
+
+In short:
+-	Putting in any way copies from the copy buffer, as populated by delete
+	and yank operations.
+-	``p``
+	Put to the cursor's location or after the cursor's line.
+-	``P``
+	Put before the cursor's location, or before the cursor's line.
+
+**Undo and Redo**
+vi has an undo feature, which can become very handy when making risky changes.
+vi will only undo the latest change performed, which includes either a whole
+set of changes made in insert mode, or a change made by filtering text through
+an outside command, or a substitution, or a single delete command, etc. To undo
+the most recent change, one must be in normal mode and use the keystroke ``u``,
+or enter the command mode command ``undo``. This change can be redone
+similarly, enter the command mode command ``redo``.
+
+In short:
+-	vi can undo and redo the most recent change, but only the most recent.
+-	From command mode:
+	+	``undo``
+	+	``redo``
+-	From normal mode:
+	+	``u``
+
+**Filtering Text and Inserting Command Output**
+vi allows one to use shell commands to help the editing process, and it is very
+powerful. To use this with text in the currently edited file, the command
+called must take text as input and write text as output. This can be done in
+multiple ways, most of them from command mode. The simplest method is from
+command mode, ``!``, followed by a motion and the name of an external program
+through which the text in the motion will be filtered. ``!4jsort`` will thus
+send the current line and four more lines down to the sort command as input,
+and replace the lines with the corrosponding output. Another method, especially
+useful with blank lines and arguments passed to the command, is ``!!`` from
+normal mode (or ``.!`` from command mode), which is shorthand for filtering the
+current line through the external command. ``!!fmt``, for example, will format
+the current line using the external fmt tool, which automatically inserts
+newlines at whitespace to meet but not exceed a goal line length. Other ways to
+use filtering include using ranges, as ``1,.!someCommand`` will filter the file
+from the first line to the current line through someCommand. Commands used in
+this way may optionally be given extra arguments, as they normally would from
+the command-line.
+
+In short:
+-	Filtering will use the range of lines, or from the cursor's position
+	through the motion, as input for a following command or shell pipeline,
+and replace the input in the buffer with the output of the commands.
+-	From normal mode:
+	+	``!!someCommand``
+		Shorthand to replace the current line with the output of
+someCommand, and use the line as input to someCommand.
+-	From command mode:
+	+	``.!someCommand``
+		Longhand version of above. Done explicitly from the command mode.
+	+	``1,.!someCommand``
+		Push the given range of line numbers, in this case 1 through
+the current line, through someCommand.
+	+	``!2jsomeCommand``
+		Filter from the cursor and down two lines through someCommand.
+	+	``1,$!indent``
+		Use the standard Unix indent utility on the whole file. Useful
+for C code, in particular.
+	+	``%!indent``
+		The same as above. ``%`` in this kind of range context is vi
+shorthand for the current file in its entirety.
+	+	``%!fmt -w 72``
+		Filters the whole file through the formatting tool with the
+arguments ``-w 72``.
+	+	``2,20!sort | uniq | grep "someString"``
+		Filters lines 2 through 20 through a unix pipeline which sorts
+the lines, gets rid of duplicate line entries, and greps for "someString".
+
+
+**Exrc**
+--------
+***
+vi, as with many interactive programs, can be configured to perform some
+operations each time it starts. Because vi is really just shorthand for ex's
+visual mode, this can be done with the .exrc file, which would be located in a
+user's home directory. There are many useful things one can do from this
+run-commands file, including remapping keys as the user sees fit, or setting
+runtime options, and setting abbreviations. Some helpful examples of this might
+be ``set number``, which prepends every line with its line number; ``set
+showmode``, which shows the current editing mode on the last line; and ``set
+showmatch``, which briefly jumps the cursor to a matching brace, if one is
+found. vi will interpret any lines that begin with a double quote ``"``, as a
+comment, and not run the command on that line. All commands need to be confined
+to one line each, which may make some lines very long. Processing of the file
+stops at the first blank line.
+
+In short:
+-	exrc is the run-commands file used by vi.
+-	Each command cannot take more than one line.
+-	Comments are started with ``"``.
+-	The first blank line found terminates the processing.
+-	Commands for the editor must be in a format that can be parsed as a
+	command. Normal mode commands must thus be used with ``:normal
+someKeystroke``.
+-	Some helpful ``set`` examples:
+	+	``set number``
+		Sets line-numbering.
+	+	``set showmatch``
+		Briefly jumps the cursor to the matching brace if it exists,
+when a brace it typed.
+	+	``set wrapmargin``
+		Sets a margin from the right side of the screen to wrap lines
+to the next.
+-	Some helpful ``abbr`` examples
+	To use abbreviations, type the abbreviation, here denoted with an
+underscore for non-clashing, and memorability, followed by whitespace, and the
+right-hand text will be inserted.
+	+	``abbr _NCMCem JohnstonS1@student.ncmich.edu``
+	+	``abbr _CIS Computer Information Systems``
+-	Some useful ``map`` examples:
+	+	``map ,O O^[``
+		open line above without entering insert mode
+	+	``map ,o o^[``
+		open line below without entering insert mode

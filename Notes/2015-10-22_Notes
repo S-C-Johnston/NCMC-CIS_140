@@ -1,0 +1,30 @@
+**Program design based on verbal description**
+-	Analyze the request for verbs and nouns, use all relevant information in initial design.
+	+	Example:
+		User guesses against a number between 1-10.
+		var = guess; constant = {min,max,number}; setGuess(); checkGuess(); validate();
+
+**Best practices**
+-	Avoid recursion
+	+	Leaks memory until terminated or until it creates a stack overflow.
+	+	If ever used, ALWAYS needs some termination method.
+	+	If a loop is needed until some condition is met, a while loop is more appropriate.
+-	For every variable declared, there should be a mutator method.
+-	Avoid magic numbers, use appropriately named and scoped constants instead.
+	+	Constants should be distinctly different from other variables in naming scheme: all caps w/ underscores between words.
+-	if statements (selection statements as a group) are expensive to perform.
+	+	Put the the most likely true condition as the first condition in the selection tree.
+-	In languages whose functions take in parameters as an array, unpack the array into a human-readable form.
+	+	``arrayNumbers = "${!1}"`` << Bash syntax for unpacking the first index of the parameter array into a variable.
+
+**PXEboot**
+Preboot Execution Environment
+"Pixieboot"
+1	Server listening for network connections looking for boot instructions.
+	+	VDI server
+		Virtual Desktop Image server
+		*	Ghost
+		*	VMWare
+2	Server interacts with the booting machine to grab a minimal functional OS.
+3	PXE server selects from VDI server an image to send over the network.
+	+	Some instances load an imaging wizard to deploy an image to the machine permanently.

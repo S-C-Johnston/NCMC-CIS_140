@@ -1,0 +1,43 @@
+**System expectations**
+-	Security
+	+	Physical
+	+	Network
+		*	Firewalls
+-	Power
+	+	UPS
+-	Climate control
+-	Cable
+-	Machines
+	+	VDI
+		Virtual desktop infrastructure
+		*	Pixieboot
+	+	Ghost
+		Standard system with all programs, settings, etc. such that it can be restored to a client at will.
+	+	Server proper
+-	Racks
+-	Virtualization
+	+	Hypervisor
+		Tiny UNIX kernel running close to the metal that allows one to partition the hardware into logical servers.
+	+	VMWare
+		Virtual machines running OSs as needed for application stacks.
+-	Grounding and bonding
+	+	12 Gauge copper at each rack, connected to a central ground.
+-	Redundancy
+-	Fire handling
+	+	Detection
+	+	Suppression
+	+	Prevention
+-	Disaster recovery
+	+	RAID v Tapes
+		*	Hourly, weekly, monthly
+
+**Certificates worth getting**
+-	Security cert.
+	+	CSSIP Security
+-	RHCE
+	Red Hat Certified Engineer
+-	CCIE
+	Cisco Certified
+	+	Datastorage
+	+	VOIP
+	+	Security
