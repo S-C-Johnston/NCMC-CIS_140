@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+##Title: Project 3-2, find and grep
+##Purpose: Demonstrate an understanding of find and grep
+##Author: Stewart Johnston
+##Email: johnstons1@student.ncmich.edu
+
+#Built under the assumption it's run from the CIS 140 server
+find ./sandbox/ -name "*tmp*" -delete;
+find ./sandbox/ -name "*html" -print0 > html-pages-tmp;
+xargs -a html-pages -0 grep "oncology" -l >> oncology-pages;
+xargs -a html-pages -0 grep "radiology" -l >> radiology-pages;
+rm html-pages-tmp;
+diff {oncology,radiology}-pages > differences;
