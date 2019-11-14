@@ -1,0 +1,86 @@
+#!/usr/bin/env bash
+
+##Title: Project 5
+##Author: Stewart Johnston (johnstons1@student.ncmich.edu
+##Version: 2019.11.07.18
+##Purpose: Demonstrate understanding of project 5 objectives
+
+declare -ar MAIN_MENU=(\
+	"Editing Commands"\
+	"Games"\
+	"User Administration"\
+	"Process Commands"\
+	"Network Commands"\
+	"Quit"\
+);
+
+function main_menu ()
+{
+	PS3="Main menu choice: ";
+	select choice in "${MAIN_MENU[@]}"
+	do
+		case $choice in
+			${MAIN_MENU[0]})
+				editing_menu;
+				;;
+			${MAIN_MENU[1]})
+				games_menu;
+				;;
+			${MAIN_MENU[2]})
+				user_admin_menu;
+				;;
+			${MAIN_MENU[3]})
+				echo "This is just a dummy";
+				;;
+			*)
+				echo "Invalid choice $choice";
+				;;
+			esac
+	done
+}
+
+declare -ar EDITING_MENU=(\
+	"Heretic EMACS"\
+	"Holy church of Vim"\
+	"Nano"\
+	"sed"\
+	"awk"\
+	"Main Menu"\
+);
+
+function editing_menu ()
+{
+	echo "Just a dummy";
+}
+
+declare -ar GAMES_MENU=(\
+	"Dwarf Fortress"\
+	"Minecraft Server"\
+	"Doom"\
+	"Main Menu"\
+);
+
+function games_menu ()
+{
+	echo "just a dummy";
+}
+
+declare -ar USER_ADMIN_MENU=(\
+	"New User"\
+	"Remove User"\
+	"Password Reset"\
+	"App assignment"\
+	"Main Menu"\
+);
+
+function user_admin_menu () 
+{
+	echo "just a dummy";
+}
+
+function main ()
+{
+	main_menu;
+}
+
+main;
