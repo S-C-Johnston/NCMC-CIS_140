@@ -2,7 +2,7 @@
 
 ##Title: Project 5
 ##Author: Stewart Johnston (johnstons1@student.ncmich.edu
-##Version: 2019.11.07.18
+##Version: 2019.11.14.20
 ##Purpose: Demonstrate understanding of project 5 objectives
 
 declare -ar MAIN_MENU=(\
@@ -16,6 +16,9 @@ declare -ar MAIN_MENU=(\
 
 function main_menu ()
 {
+	tput smul;
+	echo "Main Menu";
+	tput rmul;
 	PS3="Main menu choice: ";
 	select choice in "${MAIN_MENU[@]}"
 	do
@@ -30,7 +33,14 @@ function main_menu ()
 				user_admin_menu;
 				;;
 			${MAIN_MENU[3]})
-				echo "This is just a dummy";
+				echo "Dummy value for Process Commands";
+				;;
+			${MAIN_MENU[4]})
+				echo "Dummy text for network stuff";
+				;;
+			${MAIN_MENU[5]})
+				echo "You have chosen to quit!";
+				exit;
 				;;
 			*)
 				echo "Invalid choice $choice";
@@ -50,7 +60,36 @@ declare -ar EDITING_MENU=(\
 
 function editing_menu ()
 {
-	echo "Just a dummy";
+	PS3="Editors menu choice: ";
+	select choice in "${EDITING_MENU[@]}"
+	do
+		case $choice in
+			${EDITING_MENU[0]})
+				echo "Heresy abounds, as you've chosen"\
+				"EMACS";
+				;;
+			${EDITING_MENU[1]})
+				echo "You must have some vim and vigor"\
+				"for salvation";
+				;;
+			${EDITING_MENU[2]})
+				echo "A weak editor for weak people,"\
+				"nano";
+				;;
+			${EDITING_MENU[3]})
+				echo "You want to edit streams";
+				;;
+			${EDITING_MENU[4]})
+				echo "What an AWKward language";
+				;;
+			${EDITING_MENU[5]})
+				main_menu;
+				;;
+			*)
+				echo "Invalid choice $choice";
+				;;
+			esac
+	done
 }
 
 declare -ar GAMES_MENU=(\
@@ -62,7 +101,28 @@ declare -ar GAMES_MENU=(\
 
 function games_menu ()
 {
-	echo "just a dummy";
+	PS3="Game choice: ";
+	select choice in "${GAMES_MENU[@]}"
+	do
+		case $choice in
+			${GAMES_MENU[0]})
+				echo "Strike the Earth! Dwarf Fortress";
+				;;
+			${GAMES_MENU[1]})
+				echo "Strike the earth in a different"\
+				"way! Mine things and craft things.";
+				;;
+			${GAMES_MENU[2]})
+				echo "Rip and Tear the demons in Doom!";
+				;;
+			${GAMES_MENU[3]})
+				echo "Dummy value for Process Commands";
+				;;
+			*)
+				echo "Invalid choice $choice";
+				;;
+			esac
+	done
 }
 
 declare -ar USER_ADMIN_MENU=(\
@@ -75,11 +135,41 @@ declare -ar USER_ADMIN_MENU=(\
 
 function user_admin_menu () 
 {
-	echo "just a dummy";
+	PS3="User administration menu choice: ";
+	select choice in "${USER_ADMIN_MENU[@]}"
+	do
+		case $choice in
+			${USER_ADMIN_MENU[0]})
+				echo "Command for a new user entry";
+				;;
+			${USER_ADMIN_MENU[1]})
+				echo "Command to remove a user from"\
+				"the directory.";
+				;;
+			${USER_ADMIN_MENU[2]})
+				echo "Someone forgot their password?";
+				;;
+			${USER_ADMIN_MENU[3]})
+				echo "Assign programs to particular"\
+				"users or groups.";
+			;;
+			${USER_ADMIN_MENU[4]})
+				main_menu
+				;;
+			*)
+				echo "Invalid choice $choice";
+				;;
+			esac
+	done
 }
 
 function main ()
 {
+	bold=$(tput bold);
+	normal=$(tput sgr0);
+	echo "${bold}Welcome, pimply-faced youth, to your doom! Don't"\
+	"bleed on anything.${normal}";
+
 	main_menu;
 }
 
