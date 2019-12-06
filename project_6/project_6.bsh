@@ -1,0 +1,58 @@
+#!/usr/bin/env bash
+
+## Name: Project 6
+## Purpose: Count social-security eligible
+## Version: 2019.12.05.19.01
+## Author: Stewart Johnston
+## Email: johnstons1@student.ncmich.edu
+
+declare -r IN_FILE="$1";
+declare -ri RETIREMENT_AGE=40;
+
+IFS=",";
+
+declare -a last_names;
+declare -a first_names;
+declare -a ages;
+declare -a addresses;
+declare -a states;
+declare -a ZIP_codes;
+
+declare -i retiree_count=0;
+
+read_file() {
+	declare -i line_number=0
+	while read last_name first_name age addresse state ZIP_code
+	do
+		last_names[$line_number]=$last_name;
+		first_names[$line_number]=$first_name;
+		ages[$line_number]=$age;
+		addresses[$line_number]=$address;
+		states[$line_number]=$state;
+		ZIP_codes[$line_number]=$ZIP_code;
+		(( line_number++ ));
+	done < $IN_FILE;
+}
+
+count_retirees() {
+
+	for i in "${ages[@]}";
+	do
+		if [[ $i -ge $RETIREMENT_AGE ]]
+		then
+			(( retiree_count++ ));
+		fi
+	done;
+}
+
+print_retiree_count() {
+	echo "Number of people eligible to retire is: $retiree_count";
+}
+
+main() {
+	read_file;
+	count_retirees;
+	print_retiree_count;
+}
+
+main;
