@@ -1,4 +1,4 @@
-#!/usr/bin/env perl
+,#!/usr/bin/env perl
 #^Retrieved with `which perl` Not necessarily portable.
 
 ## Author: Stewart Johnston
@@ -138,9 +138,9 @@ sub getEmployeeIDNum {
 			resetContinueInt();
 		}
 		elsif ($cleanInput eq INT_FAILURE) {
-			print "Input rejected. Either you entered a" .
-			. " non-number, or the number was out of range."
-			. " Range is 0-" . IDENT_NUM_MAX;
+			print "Input rejected. Either you entered a", 
+			" non-number, or the number was out of range.", 
+			" Range is 0-" . IDENT_NUM_MAX;
 			setContinueInt();
 		}
 
@@ -173,10 +173,9 @@ sub getEmployeeDept {
 			resetContinueInt();
 		}
 		elsif ($cleanInput eq INT_FAILURE) {
-			print "Input rejected. Either you entered a" .
-			" non-number,";
-			print "or the number was out of range. Range is"
-			. " 0-" . DEPARTMENT_MAX;
+			print "Input rejected. Either you entered a", 
+			" non-number, or the number was out of",
+			" range. Range is" . " 0-" . DEPARTMENT_MAX;
 			setContinueInt();
 		}
 
@@ -197,8 +196,8 @@ sub getEmployeeYears {
 	my $cleanInput;
 	my $dirtyInput;
 	do {
-		print "Please enter employee's years of service rounded"
-		. " up to whole number values: ";
+		print "Please enter employee's years of service",
+		" rounded up to whole number values: ";
 		chomp ($dirtyInput = <STDIN>); 
 		debugPrint("dirtyIn",$dirtyInput);
 		$cleanInput =
@@ -211,8 +210,8 @@ sub getEmployeeYears {
 			resetContinueInt();
 		}
 		elsif ($cleanInput eq INT_FAILURE) {
-			print "Input rejected. Either you entered a" .
-			" non-number, or the number was out of range." .
+			print "Input rejected. Either you entered a", 
+			" non-number, or the number was out of range.",
 			" Range is " . YEARS_MIN . "-" . YEARS_MAX;
 			setContinueInt();
 		}
@@ -262,6 +261,6 @@ sub fetchDeptTotalYears {
 		}
 	}
 
-	print "\nThe total years of service across all members of the" .
+	print "\nThe total years of service across all members of the", 
 	" employee's department is " . $deptTotal . " years.";
 } 
