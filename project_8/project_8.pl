@@ -8,7 +8,7 @@ use v5.26.3;
 use warnings;
 use strict;
 
-sub read_config_file()
+sub read_config_file
 {
 	my $file = shift 
 		or die "No file argument: $!\n";
