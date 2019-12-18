@@ -43,7 +43,7 @@ sub set_sys_login_defs
 	eval
 	{
 		$config_hash = read_config_file("/etc/login.defs");
-	}
+	};
 	$SYS_LOGIN_DEFS{UID_MIN} = defined ${$config_hash}{UID_MIN} ?
 	${$config_hash}{UID_MIN} : 1000;
 	$SYS_LOGIN_DEFS{UID_MAX} = defined ${$config_hash}{UID_MIN} ?
